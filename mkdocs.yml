@@ -1,0 +1,18 @@
+site_name: DynaTrade Docs
+site_description: Public documentation for the DynaTrade Minecraft market plugin
+site_url: https://jeanmattcs.github.io/dynatrade-docs/
+repo_url: https://github.com/jeanmattcs/dynatrade-docs
+theme:
+  name: material
+nav:
+  - Home: docs/Home.md
+  - Installation: docs/Installation.md
+  - Quick Start: docs/Quick-Start.md
+  - How the Market Works: docs/How-the-Market-Works.md
+  - GUI Guide: docs/GUI-Guide.md
+  - Commands and Permissions: docs/Commands-and-Permissions.md
+  - Configuration: docs/Configuration.md
+  - Glossary: docs/Glossary.md
+  - Free vs Pro: docs/Free-vs-Pro.md
+  - Admin Guide: docs/Admin-Guide.md
+  - Troubleshooting: docs/Troubleshooting.md
