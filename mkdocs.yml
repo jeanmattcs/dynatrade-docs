@@ -5,14 +5,14 @@ repo_url: https://github.com/jeanmattcs/dynatrade-docs
 theme:
   name: material
 nav:
-  - Home: docs/Home.md
-  - Installation: docs/Installation.md
-  - Quick Start: docs/Quick-Start.md
-  - How the Market Works: docs/How-the-Market-Works.md
-  - GUI Guide: docs/GUI-Guide.md
-  - Commands and Permissions: docs/Commands-and-Permissions.md
-  - Configuration: docs/Configuration.md
-  - Glossary: docs/Glossary.md
-  - Free vs Pro: docs/Free-vs-Pro.md
-  - Admin Guide: docs/Admin-Guide.md
-  - Troubleshooting: docs/Troubleshooting.md
+  - Home: index.md
+  - Installation: Installation.md
+  - Quick Start: Quick-Start.md
+  - How the Market Works: How-the-Market-Works.md
+  - GUI Guide: GUI-Guide.md
+  - Commands and Permissions: Commands-and-Permissions.md
+  - Configuration: Configuration.md
+  - Glossary: Glossary.md
+  - Free vs Pro: Free-vs-Pro.md
+  - Admin Guide: Admin-Guide.md
+  - Troubleshooting: Troubleshooting.md
