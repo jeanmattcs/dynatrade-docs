@@ -39,6 +39,7 @@ Start the server once. DynaTrade will generate its configuration files inside:
 plugins/DynaTrade/
 ├── config.yml
 ├── items.yml
+├── items_pt.yml
 ├── languages/
 │   ├── messages_en.yml
 │   └── messages_pt.yml
@@ -62,6 +63,8 @@ See [Configuration](Configuration.md) for a full explanation of every option.
 Open `plugins/DynaTrade/items.yml`. A default item set is included. You can add, remove, or adjust items at any time and reload without restarting.
 
 See [Configuration — items.yml](Configuration#itemsyml) for instructions on adding new items.
+
+If your server uses Portuguese, open `plugins/DynaTrade/items_pt.yml` to customize how item names appear in the GUI, `/price`, and trade confirmations.
 
 ### 7. Apply changes
 
@@ -88,6 +91,8 @@ Shows the current health of the economy engine, the scheduler state, and how man
 /price DIAMOND
 ```
 Shows the current market price, buy price, and sell price for Diamond.
+
+Even if the server displays `Diamante` in Portuguese, the command still uses `DIAMOND`.
 
 ```
 /market

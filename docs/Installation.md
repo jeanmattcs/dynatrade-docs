@@ -52,6 +52,7 @@ Start the server once. DynaTrade will generate its configuration files:
 plugins/DynaTrade/
 |- config.yml
 |- items.yml
+|- items_pt.yml
 \- languages/
    |- messages_en.yml
    \- messages_pt.yml
@@ -104,6 +105,8 @@ apply:
 
 Open `plugins/DynaTrade/items.yml` to review the default item catalog. You can add or remove items at any time.
 
+If you run the server in Portuguese, you can also edit `plugins/DynaTrade/items_pt.yml` to override the bundled Portuguese item names without touching the pricing catalog.
+
 After any configuration change, run `/dt reload` - no restart required.
 
 See [Configuration](Configuration.md) for a full reference.
@@ -125,13 +128,13 @@ DynaTrade persists market state between versions. Upgrading does not reset price
 
 ### Checking for configuration changes
 
-New versions may add new keys to `config.yml` or `items.yml`. After an upgrade:
+New versions may add new keys to `config.yml`, `items.yml`, `items_pt.yml`, or the language files. After an upgrade:
 
 - Compare your existing `config.yml` against the newly generated default (if any).
 - New optional keys will be missing from your file - DynaTrade will use internal defaults for any missing key, so nothing will break.
 - If you want to use a new feature, add the corresponding key to your file manually.
 
-For the current `0.6.1` line, pay special attention to the `apply:` section. Older configs may not include it yet.
+For the current `0.6.3` line, pay special attention to the `apply:` section. Older configs may not include it yet.
 
 ### After a major version change
 
@@ -159,6 +162,7 @@ After installation and first startup, the complete plugin folder looks like:
 plugins/DynaTrade/
 |- config.yml           <- global configuration - safe to edit
 |- items.yml            <- item catalog - safe to edit
+|- items_pt.yml         <- Portuguese item-name overrides - safe to edit
 |- languages/
 |  |- messages_en.yml   <- English text - safe to edit
 |  \- messages_pt.yml   <- Portuguese text - safe to edit

@@ -42,7 +42,8 @@ Shows the current quote for a single item.
 - Sell price (what the player would receive)
 
 **Notes:**
-- Item keys are Minecraft material names in uppercase (e.g. `IRON_INGOT`, `OAK_LOG`).
+- Item keys are Minecraft material names such as `DIAMOND`, `IRON_INGOT`, or `OAK_LOG`.
+- Commands still use the English material key even if the server is showing translated item names in chat or the GUI.
 - This command never modifies the market. It is always safe to use for price lookups.
 
 ---
@@ -71,6 +72,11 @@ Buys items from the market at the current buy price.
 - Fails cleanly if the economy provider is unavailable
 - Attempts rollback (refund) if item delivery fails after payment
 
+**Important:**
+- `/buy` still expects the English material key.
+- Example: `/buy diamond 1` works, but `/buy diamante 1` does not.
+- If the player enters an invalid translated name, DynaTrade now responds with a hint telling them to use the English key.
+
 ---
 
 ### `/sell <item> <quantity>`
@@ -94,6 +100,11 @@ Sells items to the market at the current sell price.
 - Rejects invalid or unknown items
 - Rejects quantity the player does not hold
 - Attempts to restore removed items if the deposit fails
+
+**Important:**
+- `/sell` still expects the English material key.
+- Example: `/sell iron_ingot 64` works, but `/sell barra_de_ferro 64` does not.
+- If the player enters an invalid translated name, DynaTrade now responds with a hint telling them to use the English key.
 
 ---
 
@@ -158,14 +169,14 @@ Reloads configuration files and rebuilds the runtime.
 **Permission:** `dynatrade.admin`
 
 **What it does:**
-1. Reloads `config.yml`, `items.yml`, and the active language file
+1. Reloads `config.yml`, `items.yml`, `items_pt.yml`, and the active language file
 2. Rebuilds the pricing runtime using the reloaded configuration
 3. Restores the current market state from `market-state.yml`
 4. Recovers any valid pending signals from the journal
 5. Preserves the previous runtime if critical state is found to be invalid
 
 **When to use:**
-- After editing `config.yml` or `items.yml`
+- After editing `config.yml`, `items.yml`, or `items_pt.yml`
 - After changing the language setting
 - After adding or removing items from the catalog
 

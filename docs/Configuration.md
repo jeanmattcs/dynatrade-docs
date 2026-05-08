@@ -6,6 +6,7 @@ DynaTrade is configured through two main files plus optional language files.
 | --- | --- |
 | `plugins/DynaTrade/config.yml` | Global market behavior, template selection, spreads, sounds, apply controls, and operational logs |
 | `plugins/DynaTrade/items.yml` | The tradable item catalog and per-item tuning |
+| `plugins/DynaTrade/items_pt.yml` | Optional Portuguese item-name overrides for server-side item presentation |
 | `plugins/DynaTrade/languages/messages_en.yml` | English player-facing and GUI text |
 | `plugins/DynaTrade/languages/messages_pt.yml` | Portuguese player-facing and GUI text |
 
@@ -138,7 +139,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.6.1` production line includes bounded main-thread apply draining for durable trades.
+The `0.6.3` production line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -212,6 +213,41 @@ Important fields:
 | `idle-cycle-threshold` | Per-item stale threshold |
 | `min-price-factor` | Floor multiplier relative to base price |
 | `max-price-factor` | Ceiling multiplier relative to base price |
+
+`display-name` is still supported and remains a valid editorial fallback. When the server language is Portuguese, DynaTrade now resolves item names in this order:
+
+1. `plugins/DynaTrade/items_pt.yml`
+2. bundled `items_pt.yml` inside the jar
+3. `display-name` from `items.yml`
+4. automatic formatting from the item key, such as `NETHERITE_INGOT -> Netherite Ingot`
+
+This means you can keep `items.yml` focused on market tuning while using `items_pt.yml` only for Portuguese naming overrides.
+
+---
+
+## `items_pt.yml`
+
+This file is optional and is only used for Portuguese item-name presentation.
+
+Minimum example:
+
+```yaml
+version: 1
+
+items:
+  DIAMOND:
+    display-name: "Diamante"
+  IRON_INGOT:
+    display-name: "Barra de Ferro"
+```
+
+Use this file when:
+
+- you want Portuguese names without changing your main catalog
+- you want to override the bundled default Portuguese translations
+- you want admin-controlled naming for the GUI, `/price`, and trade receipts
+
+Do not use this file to change item keys. Internal item identity remains the material key from `items.yml`.
 
 ---
 

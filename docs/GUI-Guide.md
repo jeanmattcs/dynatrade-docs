@@ -67,6 +67,8 @@ The listing is designed to let players browse quickly:
 - Navigation stays in the bottom row
 - The middle rows are dedicated to the actual market inventory
 
+When the server language is Portuguese, the same listing automatically uses translated item names. Sorting follows the displayed name, so the visible item order can differ between English and Portuguese intentionally.
+
 ---
 
 ## Item Preview
@@ -110,6 +112,8 @@ From the current screenshots, the GUI flow is:
 5. Click the item to continue into trading
 
 Even when the player does not know exact material keys, the GUI gives enough context to browse visually and price-check naturally.
+
+This is especially important now that translated item names can appear in the GUI while chat commands still expect English material keys. Players can browse naturally in the GUI, then use `/price`, `/buy`, or `/sell` with the material key if needed.
 
 ---
 

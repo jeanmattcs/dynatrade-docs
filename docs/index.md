@@ -6,7 +6,7 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 
 ---
 
-## Current version: 0.6.1
+## Current version: 0.6.3
 
 Highlights of the current line:
 
@@ -57,7 +57,7 @@ Recent validation on the final M5 production path used:
 
 Recent valid runs landed around the `89-107 trades/s` range, with repeated confirmation runs averaging above `95/s`.
 
-This is enough to treat the current `0.6.1` line as production-ready for the validated local profile rather than as an experimental milestone build.
+This is enough to treat the current `0.6.3` line as production-ready for the validated local profile rather than as an experimental milestone build.
 
 ---
 
