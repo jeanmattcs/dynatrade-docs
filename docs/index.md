@@ -1,40 +1,68 @@
 # DynaTrade
 
-DynaTrade is a batch-based economic engine for Paper 1.21.x servers.
+DynaTrade is a batch-based market engine for Paper `1.21.x` servers.
 
-Instead of reacting to every transaction, it collects player buy and sell activity over time and processes it in scheduled cycles. Prices update between cycles — not after every click. The result is a market that responds to real player behavior without constantly swinging.
+Instead of reacting to every buy or sell like a slot machine, it aggregates player trade pressure, applies controlled price movement in cycles, and persists trade intent with recovery-focused durability. The result is a market that feels alive without turning ordinary server play into chaos.
+
+---
+
+## Current version: 0.6.1
+
+Highlights of the current line:
+
+- durable pending-trade journaling with stronger restart recovery
+- async durability batching off the Bukkit thread
+- bounded main-thread apply backpressure for burst load
+- processing-state feedback during buy and sell execution
+- safer operator defaults for production servers
 
 ---
 
 ## How it works
 
-Players trade through the GUI or commands. Each trade is recorded as market pressure and held in a buffer. When a cycle runs, DynaTrade aggregates that pressure per item and runs it through a pricing pipeline: market pressure, volatility, mean reversion, and configurable price limits. The updated state is saved to disk immediately after.
+High-level trade flow:
 
-On restart, the last confirmed state is restored. If the saved state is invalid, the plugin blocks startup rather than silently resetting prices.
+`/buy or /sell -> validation -> durable journal batch -> runtime apply -> transaction buffer -> pricing cycle`
+
+What this means in practice:
+
+- players still receive normal command and GUI feedback
+- accepted trades are made durable before runtime side effects are considered complete
+- the market still moves in cycles, not per click
+- the Bukkit thread is protected from the worst disk and burst-apply pressure
+
+On restart, the last confirmed market state is restored. If `market-state.yml` is critically invalid, DynaTrade blocks startup rather than silently resetting prices.
 
 ---
 
 ## Requirements
 
-- Paper 1.21.x (built and tested against 1.21.4)
-- Java 21
+- Paper `1.21.x` (built and validated against `1.21.4`)
+- Java `21`
 - [Vault](https://www.spigotmc.org/resources/vault.34315/)
-- A Vault-compatible economy provider — [EssentialsX](https://essentialsx.net/) is the tested option
+- A Vault-compatible economy provider - [EssentialsX](https://essentialsx.net/) is the tested option
 
 Other Bukkit-family servers are not part of the current validated surface.
 
 ---
 
-## Current version: 0.6.0
+## Validated load profile
 
-- Durable pending signal journal with stronger crash recovery behavior
-- Serial async trade processing — disk I/O off the Bukkit thread
-- Post-journal audit logging for trade failures after durability is confirmed
-- Processing state feedback during buy and sell operations
+Recent validation on the final M5 production path used:
+
+- `50` bots
+- `500` trades
+- `500/500` succeeded
+- `integrity.totalVolumeDelta = 0`
+
+Recent valid runs landed around the `89-107 trades/s` range, with repeated confirmation runs averaging above `95/s`.
+
+This is enough to treat the current `0.6.1` line as production-ready for the validated local profile rather than as an experimental milestone build.
 
 ---
 
 For first-time setup, start with [Installation](Installation.md) and [Quick Start](Quick-Start.md).
-For a full explanation of the pricing model, see [How the Market Works](How-the-Market-Works.md).
-For day-to-day admin operations, see the [Admin Guide](Admin-Guide.md).
 
+For configuration and tuning, see [Configuration](Configuration.md).
+
+For day-to-day operations, see the [Admin Guide](Admin-Guide.md).

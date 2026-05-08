@@ -2,19 +2,34 @@
 
 Public documentation for DynaTrade, built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
 
+This docs repo tracks the public operator and player-facing surface of the `0.6.1` line, including:
+
+- installation and upgrade guidance
+- configuration and item tuning
+- command and permission reference
+- admin operations and troubleshooting
+- the current production posture of the Free runtime
+
 ## Structure
 
-- `docs/` — user-facing pages (installation, configuration, commands, GUI, etc.)
-- `mkdocs.yml` — site nav and theme config
+- `docs/` - user-facing pages
+- `mkdocs.yml` - site navigation and theme configuration
 
 ## Publishing
 
-This repo is meant to be published via GitHub Pages. With MkDocs Material installed:
+With MkDocs Material installed:
 
-```
+```bash
 mkdocs gh-deploy
 ```
 
-## Keeping docs in sync
+## Sync policy
 
-Internal planning, audits, and architecture notes stay in the main private repo. This repo holds only the public-facing content. When plugin behavior changes, update here before the next release.
+Internal architecture notes, audits, and milestone planning stay in the private repository. This public docs repo should reflect:
+
+- current supported installation flow
+- current config surface
+- current runtime behavior that matters to operators
+- current validated version and production defaults
+
+When the plugin behavior changes, update this repo before the next public release or distribution push.

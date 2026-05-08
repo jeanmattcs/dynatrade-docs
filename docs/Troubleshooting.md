@@ -35,6 +35,7 @@ Most likely one of these:
 - The market cycle has not run yet
 - The scheduler is stopped
 - The trade volume is small relative to the configured `vref`
+- The item is still behaving within expected batch-based movement limits
 
 **Resolution:**
 1. Run `/dt status` — check that the scheduler is `running` and note the next cycle time.
@@ -42,6 +43,8 @@ Most likely one of these:
 3. If the scheduler is running, wait for the next cycle or force one with `/dt cycle`.
 4. If prices still do not change after a cycle, run `/dt item <item>` and check the price floor and ceiling. The item may already be at its limit.
 5. If prices are moving but imperceptibly, consider lowering `vref` or increasing `sigma` for the affected category or item.
+
+Remember that DynaTrade is cycle-based. Small bursts do not always produce dramatic movement, especially on `BALANCED` or `STABLE`.
 
 ---
 
@@ -130,6 +133,33 @@ This is expected defensive behavior. No action is required unless you observe a 
 3. If the scheduler is stopped, run `/dt reload`.
 4. Force a cycle with `/dt cycle` and watch the console for errors during the cycle.
 5. If saving fails (e.g. disk space issues), resolve the underlying I/O problem and reload.
+
+---
+
+## Heavy trading feels delayed during bursts
+
+**Symptoms:**
+- Players report that trades still succeed, but confirmations feel slower during very heavy bursts
+- The server remains healthy, but there is a visible backlog effect under load
+
+**Cause:**
+This is usually the bounded apply stage doing its job. In `0.6.1`, durable trades can be applied through a controlled main-thread drain instead of all at once.
+
+**Resolution:**
+1. Check your current `apply:` settings in `config.yml`.
+2. Confirm you are still using the validated defaults:
+
+```yaml
+apply:
+  max-per-tick: 8
+  drain-deadline-ms: 30
+```
+
+3. Do not change these blindly in production.
+4. If you run your own benchmark and want to experiment, change one value at a time and observe both throughput and server tick stability.
+
+**Important:**
+Higher `max-per-tick` can improve throughput on some hardware, but it can also reintroduce main-thread pressure during bursts.
 
 ---
 

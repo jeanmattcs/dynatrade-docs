@@ -96,6 +96,10 @@ language: en          # change to pt for Portuguese
 
 economy:
   template: BALANCED  # STABLE | BALANCED | VOLATILE | HARDCORE
+
+apply:
+  max-per-tick: 8
+  drain-deadline-ms: 30
 ```
 
 Open `plugins/DynaTrade/items.yml` to review the default item catalog. You can add or remove items at any time.
@@ -126,6 +130,8 @@ New versions may add new keys to `config.yml` or `items.yml`. After an upgrade:
 - Compare your existing `config.yml` against the newly generated default (if any).
 - New optional keys will be missing from your file - DynaTrade will use internal defaults for any missing key, so nothing will break.
 - If you want to use a new feature, add the corresponding key to your file manually.
+
+For the current `0.6.1` line, pay special attention to the `apply:` section. Older configs may not include it yet.
 
 ### After a major version change
 

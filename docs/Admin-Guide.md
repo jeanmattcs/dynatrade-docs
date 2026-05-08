@@ -69,6 +69,8 @@ Use this to answer player questions about a specific item's price, trend, or lim
 
 `/dt reload` preserves the current in-memory market state. Prices are not reset. The reloaded configuration takes effect for the next cycle and any new trades.
 
+If you change `apply.max-per-tick` or `apply.drain-deadline-ms`, treat that as an operational tuning change. Reload applies it immediately, but you should still validate the result during a staged or real load test before leaving it in production.
+
 ### When to use reload vs. restart
 
 | Situation | Use |
@@ -149,7 +151,7 @@ DynaTrade logs to the server console at key events. Learning to read these logs 
 ```
 [DynaTrade] [scheduler] started interval=6000t (300s)
 [DynaTrade] [runtime] commands registered.
-[DynaTrade] [startup] plugin enabled version=0.6.0 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
+[DynaTrade] [startup] plugin enabled version=0.6.1 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
 ```
 
 A clean startup shows: the scheduler started, commands registered, and the startup summary reported the restored item/signal counts.
@@ -161,6 +163,23 @@ A clean startup shows: the scheduler started, commands registered, and the start
 ```
 
 One line per cycle. This is the normal runtime heartbeat. Confirms how many items were priced and the direction of the cycle.
+
+### Trade apply backpressure
+
+The current `0.6.1` production line uses bounded main-thread apply draining for durable trades.
+
+```yaml
+apply:
+  max-per-tick: 8
+  drain-deadline-ms: 30
+```
+
+Practical guidance:
+
+- keep these defaults unless you have your own benchmark evidence
+- raising `max-per-tick` may improve throughput on some machines
+- raising it too far can bring back tick pressure during bursts
+- lowering the cap or deadline can be gentler on the server, but may increase backlog during heavy trading
 
 ### Warnings
 
