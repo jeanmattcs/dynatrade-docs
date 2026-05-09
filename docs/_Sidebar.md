@@ -12,6 +12,7 @@
 **Reference**
 - [Commands and Permissions](Commands-and-Permissions.md)
 - [Configuration](Configuration.md)
+- [Testing](Testing.md)
 - [Glossary](Glossary.md)
 
 **Operations**
