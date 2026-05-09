@@ -139,7 +139,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.6.4` production line includes bounded main-thread apply draining for durable trades.
+The `0.6.4.1` production line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
