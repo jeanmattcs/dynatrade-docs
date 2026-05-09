@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.6.3`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.6.4`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -36,6 +36,7 @@ This comfortably covers normal server operation.
 - race benchmark with `50` concurrent bots and `500` total trades
 - crash recovery benchmark with forced process kill and post-restart `delta = 0`
 - reset benchmark covering `/dt reset`, state wipe, and post-reset trade viability
+- audit-driven brutal-load validation with `100` bots / `1000` fire-and-forget commands, recovery OK, and post-drain `delta = 0`
 
 ---
 
@@ -83,6 +84,8 @@ For the overload `50/1000` scenario, non-zero delta should be interpreted carefu
 
 This is why the `50/1000` result is useful as a ceiling test, but not as the baseline definition of normal server behavior.
 
+For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rather than by chat acknowledgments. The `100/1000` stress pass confirms that the applied runtime audit and processed cycle volume can reconcile to `delta = 0` after the queue is drained, while larger stages may run into server spam protection or client harness limits before they produce a clean throughput measurement.
+
 ---
 
 ## Recommendations
@@ -96,7 +99,7 @@ This is why the `50/1000` result is useful as a ceiling test, but not as the bas
 
 ## Release position
 
-The current `0.6.3` line is production-ready for the validated profile:
+The current `0.6.4` line is production-ready for the validated profile:
 
 - sustained load around `100 trades/s`
 - zero integrity drift in the nominal benchmark

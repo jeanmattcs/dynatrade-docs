@@ -143,7 +143,7 @@ This is expected defensive behavior. No action is required unless you observe a 
 - The server remains healthy, but there is a visible backlog effect under load
 
 **Cause:**
-This is usually the bounded apply stage doing its job. In `0.6.3`, durable trades can be applied through a controlled main-thread drain instead of all at once.
+This is usually the bounded apply stage doing its job. In `0.6.4`, durable trades can be applied through a controlled main-thread drain instead of all at once.
 
 **Resolution:**
 1. Check your current `apply:` settings in `config.yml`.
@@ -152,7 +152,7 @@ This is usually the bounded apply stage doing its job. In `0.6.3`, durable trade
 ```yaml
 apply:
   max-per-tick: 8
-  drain-deadline-ms: 30
+  drain-deadline-ms: 15
 ```
 
 3. Do not change these blindly in production.

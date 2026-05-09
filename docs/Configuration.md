@@ -139,12 +139,12 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.6.3` production line includes bounded main-thread apply draining for durable trades.
+The `0.6.4` production line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
   max-per-tick: 8
-  drain-deadline-ms: 30
+  drain-deadline-ms: 15
 ```
 
 What these do:
@@ -157,7 +157,7 @@ What these do:
 Validated production defaults:
 
 - `max-per-tick: 8`
-- `drain-deadline-ms: 30`
+- `drain-deadline-ms: 15`
 
 Change these only if you are actively benchmarking your own environment.
 
@@ -267,7 +267,7 @@ pricing:
 
 apply:
   max-per-tick: 8
-  drain-deadline-ms: 30
+  drain-deadline-ms: 15
 ```
 
 Then tune categories and specific items only after observing real player behavior.

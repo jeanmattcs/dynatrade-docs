@@ -6,12 +6,12 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 
 ---
 
-## Current version: 0.6.3
+## Current version: 0.6.4
 
 Highlights of the current line:
 
 - durable pending-trade journaling with stronger restart recovery
-- async durability batching off the Bukkit thread
+- async durability batching and cycle persistence off the Bukkit thread
 - bounded main-thread apply backpressure for burst load
 - processing-state feedback during buy and sell execution
 - safer operator defaults for production servers
@@ -48,7 +48,7 @@ Other Bukkit-family servers are not part of the current validated surface.
 
 ## Validated load profile
 
-Recent validation on the final M5 production path used:
+Recent validation on the current production runtime used:
 
 - `50` bots
 - `500` trades
@@ -57,7 +57,7 @@ Recent validation on the final M5 production path used:
 
 Recent valid runs landed around the `89-107 trades/s` range, with repeated confirmation runs averaging above `95/s`.
 
-This is enough to treat the current `0.6.3` line as production-ready for the validated local profile rather than as an experimental milestone build.
+This is enough to treat the current `0.6.4` line as production-ready for the validated local profile rather than as an experimental milestone build.
 
 ---
 

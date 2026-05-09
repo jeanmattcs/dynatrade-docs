@@ -2,7 +2,7 @@
 
 Public documentation for DynaTrade, built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
 
-This docs repo tracks the public operator and player-facing surface of the `0.6.3` line, including:
+This docs repo tracks the public operator and player-facing surface of the `0.6.4` line, including:
 
 - installation and upgrade guidance
 - configuration and item tuning
