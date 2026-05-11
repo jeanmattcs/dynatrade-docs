@@ -134,7 +134,7 @@ New versions may add new keys to `config.yml`, `items.yml`, `items_pt.yml`, or t
 - New optional keys will be missing from your file - DynaTrade will use internal defaults for any missing key, so nothing will break.
 - If you want to use a new feature, add the corresponding key to your file manually.
 
-For the current `0.6.4.1` line, pay special attention to the `apply:` section. Older configs may not include it yet.
+For the current `0.7.0` line, pay special attention to the `apply:` section. Older configs may not include it yet.
 
 ### After a major version change
 
@@ -173,3 +173,4 @@ plugins/DynaTrade/
 ```
 
 The files marked "do not edit manually" are managed exclusively by DynaTrade. Manual edits to those files risk corrupting the market state. See [Admin Guide](Admin-Guide.md#file-reference) for more details.
+

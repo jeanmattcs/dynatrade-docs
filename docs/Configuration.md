@@ -139,7 +139,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.6.4.1` production line includes bounded main-thread apply draining for durable trades.
+The `0.7.0` production line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -284,3 +284,4 @@ Then tune categories and specific items only after observing real player behavio
 | Common items crash too fast | Lower `sigma` and raise `vref` |
 | Recovery feels too slow | Raise `inactive-gamma` or lower `idle-cycle-threshold` |
 | Burst load feels rough on your server | Benchmark before changing `apply.*` defaults |
+

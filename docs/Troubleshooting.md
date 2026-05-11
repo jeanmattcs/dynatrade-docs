@@ -143,7 +143,7 @@ This is expected defensive behavior. No action is required unless you observe a 
 - The server remains healthy, but there is a visible backlog effect under load
 
 **Cause:**
-This is usually the bounded apply stage doing its job. In `0.6.4.1`, durable trades can be applied through a controlled main-thread drain instead of all at once.
+This is usually the bounded apply stage doing its job. In `0.7.0`, durable trades can be applied through a controlled main-thread drain instead of all at once.
 
 **Resolution:**
 1. Check your current `apply:` settings in `config.yml`.
@@ -253,4 +253,5 @@ When something seems wrong with the economy:
 6. Force a cycle with `/dt cycle` and check the console cycle summary.
 7. If nothing resolves the issue, run `/dt reload` to rebuild the runtime.
 8. As a last resort, use `/dt reset` to start the economy from clean base prices.
+
 

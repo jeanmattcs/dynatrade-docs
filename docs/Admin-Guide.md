@@ -151,7 +151,7 @@ DynaTrade logs to the server console at key events. Learning to read these logs 
 ```
 [DynaTrade] [scheduler] started interval=6000t (300s)
 [DynaTrade] [runtime] commands registered.
-[DynaTrade] [startup] plugin enabled version=0.6.4.1 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
+[DynaTrade] [startup] plugin enabled version=0.7.0 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
 ```
 
 A clean startup shows: the scheduler started, commands registered, and the startup summary reported the restored item/signal counts.
@@ -166,7 +166,7 @@ One line per cycle. This is the normal runtime heartbeat. Confirms how many item
 
 ### Trade apply backpressure
 
-The current `0.6.4.1` production line uses bounded main-thread apply draining for durable trades.
+The current `0.7.0` production line uses bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -234,4 +234,5 @@ DynaTrade uses two admin permission nodes intentionally. This lets you give staf
 | When players report wrong prices | `/dt item <item>`, compare to `items.yml` base price and limits |
 | When the economy feels stuck | `/dt status` to check scheduler, `/dt cycle` to force a cycle if needed |
 | Before a planned economy wipe | Back up `market-state.yml`, then run `/dt reset` |
+
 

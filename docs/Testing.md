@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.6.4.1`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.7.0`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -99,10 +99,11 @@ For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rat
 
 ## Release position
 
-The current `0.6.4.1` line is production-ready for the validated profile:
+The current `0.7.0` line is production-ready for the validated profile:
 
 - sustained load around `100 trades/s`
 - zero integrity drift in the nominal benchmark
 - stable restart and recovery behavior
 
 The known limit is burst latency under extreme apply-queue pressure, which is documented here rather than treated as a blocker for ordinary server operation.
+
