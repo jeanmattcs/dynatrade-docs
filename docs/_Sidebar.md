@@ -1,7 +1,7 @@
 # DynaTrade
 
 **Getting started**
-- [Home](Home.md)
+- [Home](index.md)
 - [Installation](Installation.md)
 - [Quick Start](Quick-Start.md)
 
