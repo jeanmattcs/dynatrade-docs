@@ -1,6 +1,6 @@
 # DynaTrade
 
-DynaTrade is a batch-based market engine for Paper `1.21.x` servers.
+DynaTrade is a batch-based market engine for Spigot/Paper `1.21.x` servers.
 
 Instead of reacting to every buy or sell like a slot machine, it aggregates player trade pressure, applies controlled price movement in cycles, and persists trade intent with recovery-focused durability. The result is a market that feels alive without turning ordinary server play into chaos.
 
@@ -37,12 +37,15 @@ On restart, the last confirmed market state is restored. If `market-state.yml` i
 
 ## Requirements
 
-- Paper `1.21.x` (built and validated against `1.21.4`)
+- Spigot/Paper `1.21.x` (built against Spigot API `1.21.4-R0.1-SNAPSHOT`)
 - Java `21`
 - [Vault](https://www.spigotmc.org/resources/vault.34315/)
 - A Vault-compatible economy provider - [EssentialsX](https://essentialsx.net/) is the tested option
 
-Other Bukkit-family servers are not part of the current validated surface.
+Current validated surface:
+
+- Spigot `1.21.4` smoke baseline
+- Paper `1.21.4` smoke and load baseline
 
 ---
 
