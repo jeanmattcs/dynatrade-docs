@@ -8,8 +8,8 @@ This page covers every step required to install DynaTrade, verify that it is run
 
 | Requirement | Version | Notes |
 |---|---|---|
-| **Paper** | 1.21.x | Built and validated against Paper API 1.21.4. Other Bukkit-family servers are not part of the current validated surface. |
-| **Java** | 21 | Required by Paper 1.21.x. |
+| **Spigot / Paper** | 1.21.x | Built against Spigot API `1.21.4-R0.1-SNAPSHOT`. Validated with Spigot `1.21.4` smoke and Paper `1.21.4` smoke/load. |
+| **Java** | 21 | Required by the validated 1.21.x server runtime. |
 | **Vault** | Any current release | Required for economy integration. DynaTrade declares Vault as a soft dependency - the plugin loads without it, but buy and sell commands are disabled until Vault and an economy provider are present. |
 | **Economy provider** | Any Vault-compatible | [EssentialsX](https://essentialsx.net/) is the recommended option. |
 
@@ -150,7 +150,7 @@ To fully remove DynaTrade:
 2. Remove `DynaTrade-<version>.jar` from `plugins/`.
 3. Optionally delete `plugins/DynaTrade/` if you no longer need the market data or configuration.
 
-To temporarily disable DynaTrade without removing it, rename the jar (for example, add `.disabled` as a suffix) - Paper will not load it on the next start.
+To temporarily disable DynaTrade without removing it, rename the jar (for example, add `.disabled` as a suffix) - the server will not load it on the next start.
 
 ---
 

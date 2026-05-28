@@ -8,7 +8,7 @@ This page walks you through installing DynaTrade and getting the market running 
 
 Before installing DynaTrade, make sure you have:
 
-- **Paper 1.21.x** — DynaTrade is built and validated against Paper API 1.21.4.
+- **Spigot or Paper 1.21.x** - DynaTrade is built against Spigot API `1.21.4-R0.1-SNAPSHOT` and validated on Spigot `1.21.4` and Paper `1.21.4`.
 - **Java 21**
 - **[Vault](https://www.spigotmc.org/resources/vault.34315/)** — required for economy integration.
 - **A Vault-compatible economy provider** — [EssentialsX](https://essentialsx.net/) is the recommended option.

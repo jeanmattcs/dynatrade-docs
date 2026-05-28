@@ -32,6 +32,7 @@ This comfortably covers normal server operation.
 ### What passed cleanly
 
 - `50/500` load benchmark with zero drift
+- smoke validation on `Spigot 1.21.4` for startup, trade flow, reload, restart, and fail-safe state blocking
 - smoke validation for startup, trade flow, reload, restart, and fail-safe state blocking
 - race benchmark with `50` concurrent bots and `500` total trades
 - crash recovery benchmark with forced process kill and post-restart `delta = 0`
@@ -104,6 +105,7 @@ The current `0.7.1` line is production-ready for the validated profile:
 - sustained load around `100 trades/s`
 - zero integrity drift in the nominal benchmark
 - stable restart and recovery behavior
+- compatibility smoke validated on `Spigot 1.21.4`
 
 The known limit is burst latency under extreme apply-queue pressure, which is documented here rather than treated as a blocker for ordinary server operation.
 
