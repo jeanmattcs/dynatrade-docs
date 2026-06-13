@@ -119,6 +119,37 @@ Idle recovery helps stale items move back toward their baseline when they have b
 
 ---
 
+### Player-aware pressure calibration
+
+```yaml
+pricing:
+  player-aware-pressure:
+    target-participation-players: 4
+    min-participation-factor: 0.25
+```
+
+Player-aware pressure normalization is part of DynaTrade's base pricing model. It does not need to be enabled.
+
+These values only tune intensity:
+
+| Key | Meaning |
+| --- | --- |
+| `target-participation-players` | Unique players on the dominant pressure side needed for full pressure in one cycle |
+| `min-participation-factor` | Minimum pressure factor when participation data exists but is below the target |
+
+Default behavior:
+
+| Unique players | Pressure factor |
+| ---: | ---: |
+| 1 | `0.25` |
+| 2 | `0.50` |
+| 3 | `0.75` |
+| 4+ | `1.00` |
+
+When participation data is not available, DynaTrade uses the original raw pressure unchanged. This covers recovery replay, older aggregate signals, and internal signals without player identity.
+
+---
+
 ### Operational logs
 
 ```yaml
@@ -139,7 +170,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.7.3` production line includes bounded main-thread apply draining for durable trades.
+The `0.8.0` line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -264,6 +295,9 @@ economy:
 pricing:
   buy-spread: 0.06
   sell-spread: 0.10
+  player-aware-pressure:
+    target-participation-players: 4
+    min-participation-factor: 0.25
 
 apply:
   max-per-tick: 8

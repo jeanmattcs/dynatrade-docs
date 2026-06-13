@@ -12,8 +12,12 @@ A player buy or sell action executed through `/buy`, `/sell`, or the market GUI.
 ### Market signal
 An internal record of trade activity for one item in one direction (buy or sell). Each signal carries a volume — the number of units traded. Signals are collected in the transaction buffer until the next cycle processes them.
 
+When the signal comes from a player-backed trade, it may also carry cycle-local player participation metadata. Legacy, recovery, replay, pending, compensation, and internal signals can remain volume-only.
+
 ### Transaction buffer
 An in-memory structure that accumulates market signals between cycles. It is thread-safe and lock-free for recording incoming trades. At cycle time, the buffer is drained atomically — all accumulated signals are extracted at once and replaced with an empty buffer.
+
+The buffer also tracks unique player participation per item and side for the current cycle only. Participation metadata is drained with the cycle and is not persisted per player.
 
 ### Pending signals
 Market signals that have been accepted and journaled but not yet absorbed by a completed cycle. If the server restarts between a trade and the next cycle, pending signals are recovered from the journal and applied at the next cycle.
@@ -53,6 +57,15 @@ A fractional value subtracted from the market price to determine the sell price.
 
 ### Market pressure (deltaM)
 The net signal calculated from the accumulated buy and sell volumes for one item in a cycle. High buy volume relative to sell volume produces positive pressure (price rises). High sell volume produces negative pressure (price falls). Balanced activity produces low net pressure.
+
+### Player-aware pressure normalization
+A base pricing behavior that softens market pressure when the dominant side of a cycle was produced by too few unique players. It is not an optional feature flag: if valid participation data exists, DynaTrade applies it automatically. If participation data is missing or invalid, the original raw pressure is preserved.
+
+### Target participation players
+The number of unique players on the dominant side needed for full market pressure. Default: `4`. With the default value, one player applies `25%` pressure, two players `50%`, three players `75%`, and four or more players `100%`, subject to the minimum participation factor.
+
+### Minimum participation factor
+The lower bound for player-aware pressure normalization. Default: `0.25`. This prevents a valid player-backed cycle from being reduced below 25% of its raw pressure.
 
 ### Sigma (σ)
 The price sensitivity of an item. Controls how strongly market pressure translates into price movement. Higher sigma means the item reacts more aggressively to the same volume of trades. Configurable globally, per category, or per item.

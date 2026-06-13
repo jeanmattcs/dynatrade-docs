@@ -19,6 +19,6 @@
 - [Admin Guide](Admin-Guide.md)
 - [Troubleshooting](Troubleshooting.md)
 
-**Product**
-- [Free vs Pro](Free-vs-Pro.md)
+**Roadmap**
+- [Future Features](Future-Features.md)
 
