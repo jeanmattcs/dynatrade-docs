@@ -56,6 +56,10 @@ At cycle time, DynaTrade looks at the accumulated buy and sell volume for each i
 - High sell volume relative to buy volume → downward pressure → price falls
 - Balanced activity → low net pressure → price moves little
 
+DynaTrade also considers how many unique players contributed to the dominant side of that pressure during the current cycle. This is base pricing behavior. It helps distinguish a one-player bulk trade from broader server participation with the same raw volume.
+
+If participation data is available, pressure is softened when only a few players caused the volume. If participation data is not available, such as during recovery replay or older aggregate signals, DynaTrade uses the original raw pressure unchanged.
+
 ---
 
 ## The pricing pipeline
@@ -64,11 +68,12 @@ For each item with pending signals, the cycle runs this pipeline:
 
 ```
 1. Calculate market pressure (deltaM) from buy/sell volume vs. reference volume (vref)
-2. Project the new price based on sigma (volatility) and deltaM
-3. Apply mean reversion — pull the price back toward its configured baseline
-4. Apply max variation cap — limit how far the price can move in a single cycle
-5. Clamp the result to the item's configured floor and ceiling (min/max price factor)
-6. Settle near the reference if the result lands very close to the baseline
+2. Normalize pressure by current-cycle player participation, when participation data exists
+3. Project the new price based on sigma (volatility) and adjusted deltaM
+4. Apply mean reversion — pull the price back toward its configured baseline
+5. Apply max variation cap — limit how far the price can move in a single cycle
+6. Clamp the result to the item's configured floor and ceiling (min/max price factor)
+7. Settle near the reference if the result lands very close to the baseline
 ```
 
 Items without new trade activity in a given cycle can still be processed for mean reversion if their price remains displaced from baseline.
@@ -81,6 +86,8 @@ Items without new trade activity in a given cycle can still be processed for mea
 |---|---|
 | `sigma` | How strongly the item reacts to buy/sell pressure. Higher = more sensitive. |
 | `vref` | Reference volume. Lower = smaller trades can move the price. |
+| `player-aware-pressure.target-participation-players` | How many unique players on the dominant side are treated as full participation for one cycle. |
+| `player-aware-pressure.min-participation-factor` | Minimum pressure factor when participation exists but is below the target. |
 | `gamma` | Mean reversion strength. Higher = prices return to baseline faster. |
 | `max-var-percent` | Maximum price movement allowed per cycle (e.g. `0.15` = 15% cap). |
 | `min-price-factor` | Price floor as a multiple of base price. |

@@ -6,13 +6,15 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 
 ---
 
-## Current version: 0.7.3
+## Current version: 0.8.0
 
 Highlights of the current line:
 
 - durable pending-trade journaling with stronger restart recovery
 - async durability batching and cycle persistence off the Bukkit thread
 - bounded main-thread apply backpressure for burst load
+- momentum-aware pricing groundwork and future pricing extensibility
+- player-aware pressure normalization as base pricing behavior
 - processing-state feedback during buy and sell execution
 - safer operator defaults for production servers
 
@@ -60,7 +62,7 @@ Recent validation on the current production runtime used:
 
 Recent valid runs landed around the `89-107 trades/s` range, with repeated confirmation runs averaging above `95/s`.
 
-This is enough to treat the current `0.7.3` line as production-ready for the validated local profile rather than as an experimental milestone build.
+This is enough to treat the current `0.8.0` line as a validated runtime for the documented local profile rather than as an unvalidated milestone build.
 
 ---
 
