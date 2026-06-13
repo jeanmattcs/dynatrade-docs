@@ -1,7 +1,7 @@
 # DynaTrade
 
 **Getting started**
-- [Home](Home.md)
+- [Home](index.md)
 - [Installation](Installation.md)
 - [Quick Start](Quick-Start.md)
 
@@ -19,6 +19,6 @@
 - [Admin Guide](Admin-Guide.md)
 - [Troubleshooting](Troubleshooting.md)
 
-**Product**
-- [Free vs Pro](Free-vs-Pro.md)
+**Roadmap**
+- [Future Features](Future-Features.md)
 
