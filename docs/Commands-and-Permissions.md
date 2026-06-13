@@ -79,19 +79,19 @@ Buys items from the market at the current buy price.
 
 ---
 
-### `/sell <item> <quantity>`
+### `/sell <item> <quantity|all>`
 
 Sells items to the market at the current sell price.
 
 **Permission:** `dynatrade.sell` (default: `true`)
 
-**Syntax:** `/sell <MATERIAL_KEY> <quantity>`
+**Syntax:** `/sell <MATERIAL_KEY> <quantity|all>`
 
-**Example:** `/sell IRON_INGOT 64`
+**Examples:** `/sell IRON_INGOT 64`, `/sell IRON_INGOT all`
 
 **What it does:**
 1. Validates the item exists in the catalog
-2. Validates the player holds enough of that item
+2. Resolves either an explicit quantity or `all` for the full stack count the player is carrying
 3. Removes the items from the player's inventory
 4. Deposits the proceeds into the player's balance via Vault
 5. Records sell pressure for the next market cycle
@@ -99,18 +99,20 @@ Sells items to the market at the current sell price.
 **Safeguards:**
 - Rejects invalid or unknown items
 - Rejects quantity the player does not hold
+- Rejects `all` if the player does not hold any of the target item
 - Attempts to restore removed items if the deposit fails
 
 **Important:**
 - `/sell` still expects the English material key.
 - Example: `/sell iron_ingot 64` works, but `/sell barra_de_ferro 64` does not.
+- `/sell <item> all` sells every matching item found in the player's inventory.
 - If the player enters an invalid translated name, DynaTrade now responds with a hint telling them to use the English key.
 
 ---
 
 ## Admin commands
 
-All admin commands are grouped under `/dt`. The `dynatrade.admin` permission is required for most of them. The reset action requires the separate `dynatrade.admin.reset` permission.
+All admin commands are grouped under `/dt`, which acts as the operator root command for diagnostics, reloads, and manual cycle control. The `dynatrade.admin` permission is required for the standard `/dt` subcommands. The destructive reset flow is intentionally split into the separate `dynatrade.admin.reset` permission.
 
 ---
 
@@ -119,6 +121,8 @@ All admin commands are grouped under `/dt`. The `dynatrade.admin` permission is 
 Shows a summary of available `/dt` subcommands.
 
 **Permission:** `dynatrade.admin`
+
+Use this first if a staff member has access to `/dt` but is not sure which operational actions are available on the current server.
 
 ---
 
@@ -139,6 +143,7 @@ Shows the current health of the DynaTrade runtime.
 - Storage health summary
 
 Use this command first when diagnosing any issue with the economy.
+It is safe to delegate to moderators or support staff because it is read-only.
 
 ---
 
@@ -159,6 +164,7 @@ Shows a focused diagnostic snapshot for one item.
 - Configured price floor and ceiling
 
 Use this to quickly answer player reports about a specific item's pricing.
+It is also read-only and safe to delegate to staff who should not be changing the live economy.
 
 ---
 
@@ -183,6 +189,7 @@ Reloads configuration files and rebuilds the runtime.
 **Notes:**
 - In-memory prices are not reset by a reload. The persisted market state is restored as-is.
 - If `market-state.yml` is invalid, reload will not silently apply base prices. It will log the problem and preserve the previous runtime.
+- This command requires `dynatrade.admin` because it changes live runtime behavior and should be limited to trusted operators.
 
 ---
 
@@ -204,6 +211,8 @@ Forces an immediate market cycle.
 - During testing to see the effect of recent trades immediately
 - After a controlled trade scenario to advance the market state
 - When you want to process accumulated signals without waiting for the scheduled cycle
+
+This command requires `dynatrade.admin` because it actively advances the market.
 
 ---
 
@@ -242,5 +251,5 @@ Performs a full reset of the dynamic market state, restoring base prices from `i
 | `dynatrade.admin` | `op` | `/dt status`, `/dt item`, `/dt reload`, `/dt cycle`, `/dt help` |
 | `dynatrade.admin.reset` | `op` | `/dt reset` |
 
-The `dynatrade.admin.reset` permission is intentionally separate from `dynatrade.admin`. This allows you to give trusted staff access to diagnostics and cycle control without allowing a full economy reset.
+The `dynatrade.admin` node is the main gate for `/dt` administration. It is appropriate for trusted staff who need to inspect the economy, reload config, or force a cycle. The `dynatrade.admin.reset` permission is intentionally separate so only owners or senior administrators can wipe the market state.
 
