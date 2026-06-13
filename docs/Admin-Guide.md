@@ -151,7 +151,7 @@ DynaTrade logs to the server console at key events. Learning to read these logs 
 ```
 [DynaTrade] [scheduler] started interval=6000t (300s)
 [DynaTrade] [runtime] commands registered.
-[DynaTrade] [startup] plugin enabled version=0.7.0 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
+[DynaTrade] [startup] plugin enabled version=0.8.1 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
 ```
 
 A clean startup shows: the scheduler started, commands registered, and the startup summary reported the restored item/signal counts.
@@ -166,7 +166,7 @@ One line per cycle. This is the normal runtime heartbeat. Confirms how many item
 
 ### Trade apply backpressure
 
-The current `0.7.0` production line uses bounded main-thread apply draining for durable trades.
+The current `0.8.1` line uses bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:

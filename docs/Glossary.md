@@ -1,163 +1,141 @@
 # Glossary
 
-This glossary defines the terms used throughout DynaTrade's documentation and in-game interfaces. Terms are listed in the order they naturally appear in the system's pipeline, from trade input to price output.
+This glossary defines the main terms used throughout DynaTrade's public documentation.
 
 ---
 
 ## Trade and market activity
 
 ### Trade
-A player buy or sell action executed through `/buy`, `/sell`, or the market GUI. A trade is validated, charged or paid through Vault, and then recorded as a market signal.
+A player buy or sell action executed through `/buy`, `/sell`, or the market GUI.
 
 ### Market signal
-An internal record of trade activity for one item in one direction (buy or sell). Each signal carries a volume — the number of units traded. Signals are collected in the transaction buffer until the next cycle processes them.
+An internal record of trade activity for one item and one direction. Signals always carry volume. Player-backed signals can also carry cycle-local participation metadata.
 
 ### Transaction buffer
-An in-memory structure that accumulates market signals between cycles. It is thread-safe and lock-free for recording incoming trades. At cycle time, the buffer is drained atomically — all accumulated signals are extracted at once and replaced with an empty buffer.
+The in-memory structure that accumulates signals between cycles. It also tracks unique player participation per item and side for the current cycle only.
 
 ### Pending signals
-Market signals that have been accepted and journaled but not yet absorbed by a completed cycle. If the server restarts between a trade and the next cycle, pending signals are recovered from the journal and applied at the next cycle.
+Signals that were accepted and journaled but have not yet been absorbed by a completed cycle.
 
 ### Accepted trade journal (`pending-signals.log`)
-An append-only log of every accepted trade signal. Written durably after each trade before the signal enters the buffer. Used for crash recovery — if the server stops before a cycle runs, the journal allows DynaTrade to reconstruct what was in the buffer.
+The append-only durability log for accepted trades. It is used for crash recovery.
 
 ---
 
 ## Pricing concepts
 
 ### Base price
-The configured starting price of an item, set in `items.yml`. The base price is the anchor the market reverts toward over time. It does not change dynamically — only `currentPrice` changes.
+The configured anchor price of an item from `items.yml`.
 
 ### Current price (market price)
-The live reference price of an item after all cycle calculations are applied. This is the value the market is actually trading around. It can move up or down from the base price based on player activity and mean reversion.
+The live reference price after cycle calculations are applied.
 
 ### Buy price
-The price a player pays when purchasing an item from the market. Calculated as:
-```
-buy price = current price × (1 + buy-spread)
-```
-Always higher than the current price.
+What a player pays when buying from the market: `current price * (1 + buy-spread)`.
 
 ### Sell price
-The price a player receives when selling an item to the market. Calculated as:
-```
-sell price = current price × (1 − sell-spread)
-```
-Always lower than the current price.
+What a player receives when selling to the market: `current price * (1 - sell-spread)`.
 
 ### Buy spread
-A fractional value added to the market price to determine the buy price. Configured as `pricing.buy-spread` in `config.yml`. A value of `0.06` means players pay 6% above the market price.
+The fractional markup above market price for buys. Default public example: `0.06`.
 
 ### Sell spread
-A fractional value subtracted from the market price to determine the sell price. Configured as `pricing.sell-spread`. A value of `0.10` means players receive 10% below the market price.
+The fractional markdown below market price for sells. Default public example: `0.10`.
 
-### Market pressure (deltaM)
-The net signal calculated from the accumulated buy and sell volumes for one item in a cycle. High buy volume relative to sell volume produces positive pressure (price rises). High sell volume produces negative pressure (price falls). Balanced activity produces low net pressure.
+### Market pressure (`deltaM`)
+The net pressure produced by accumulated buy and sell volume for an item in one cycle.
 
-### Sigma (σ)
-The price sensitivity of an item. Controls how strongly market pressure translates into price movement. Higher sigma means the item reacts more aggressively to the same volume of trades. Configurable globally, per category, or per item.
+### Player-aware pressure normalization
+Base pricing behavior that softens market pressure when too few unique players created the dominant-side volume. If valid participation data exists, DynaTrade applies this automatically. If participation data is missing or invalid, raw pressure is preserved unchanged.
 
-### Reference volume (vref)
-The trade volume used as the scale reference when calculating market pressure. A lower vref means a smaller trade volume can move the price significantly. A higher vref requires more trading activity to produce the same price movement. Configurable globally, per category, or per item.
+### Target participation players
+The number of unique dominant-side players needed for full participation confidence. Default: `4`.
 
----
+### Minimum participation factor
+The lower bound for valid low-participation cycles. Default: `0.25`.
 
-## Pricing pipeline steps
+### Active participation reach
+An additional refinement that only applies after base participation confidence has already saturated. It compares the dominant-side unique-player count against the currently active economy participant count.
 
-### Projected price
-The price after applying market pressure and sigma — the raw result before any correction or clamping is applied.
+### Reach weight
+How strongly active participation reach influences the final normalized factor.
 
-### Mean reversion
-A correction applied every cycle that pulls the current price toward the base price. It prevents items from drifting indefinitely away from their configured value. Controlled by the `gamma` parameter.
+### Sigma
+The price sensitivity of an item. Higher sigma means the same pressure moves price more strongly.
 
-### Gamma (γ)
-The mean reversion strength. Higher gamma pulls prices back to baseline faster. Lower gamma allows prices to stay displaced from their baseline longer.
+### Reference volume (`vref`)
+The trade volume scale used when converting raw volume into market pressure.
+
+### Gamma
+The mean reversion strength that pulls price back toward baseline.
 
 ### Max variation per cycle (`max-var-percent`)
-A hard cap on how much the price can change in a single cycle, expressed as a percentage. If the calculated movement exceeds this limit, it is capped. Prevents extreme single-cycle jumps even under very high trade pressure.
+The maximum allowed single-cycle price movement.
 
 ### Price floor (`min-price-factor`)
-The minimum price an item can reach, calculated as `base-price × min-price-factor`. The market price can never fall below this value regardless of sell pressure. Configurable globally or per item.
+The minimum market price as a multiple of base price.
 
 ### Price ceiling (`max-price-factor`)
-The maximum price an item can reach, calculated as `base-price × max-price-factor`. The market price can never rise above this value regardless of buy pressure. Configurable globally or per item.
+The maximum market price as a multiple of base price.
 
 ### Settle near reference
-A final pipeline step: if the calculated price after clamping lands very close to the base price, it is snapped exactly to the base price. This prevents prices from hovering just barely away from their anchor indefinitely.
+The final pipeline behavior that snaps a nearly settled result exactly to its baseline.
 
 ---
 
 ## Cycle and scheduling
 
 ### Market cycle
-The periodic event where DynaTrade drains the transaction buffer, calculates new prices for all affected and recovering items, persists the result, and applies the updated prices to the live runtime. This is the fundamental unit of market progression.
+The periodic event that drains the transaction buffer, recalculates prices, persists state, and applies the new runtime prices.
 
 ### Cycle interval (`batch-interval-ticks`)
-How often the market cycle runs, measured in server ticks. 20 ticks = 1 second. Default is 6000 ticks (5 minutes).
+How often the cycle runs. `20` ticks equals `1` second.
 
 ### Cycle generation
-An incrementing counter that advances by one after every successful cycle. Used internally to correlate market state, pending signals, and checkpoints. Visible in `/dt status` as "Generation".
+The incrementing number that advances after every successful cycle.
 
 ### Manual cycle
-A cycle triggered immediately by an admin via `/dt cycle`, outside of the normal schedule. Processes all pending signals and updates prices right away.
+A cycle triggered immediately by an admin using `/dt cycle`.
 
 ---
 
 ## Idle recovery
 
 ### Idle item
-An item that has received no new trade signals for several consecutive cycles. An idle item can still be processed for mean reversion if its price remains meaningfully displaced from its base price.
+An item that has gone several cycles without new trade activity.
 
 ### Idle cycle threshold (`idle-cycle-threshold`)
-The number of consecutive quiet cycles an item must have before the accelerated idle recovery rate can activate. Configurable globally, per category, or per item.
+How many quiet cycles must pass before the stronger idle correction can activate.
 
 ### Inactive gamma (`inactive-gamma`)
-A stronger mean reversion rate applied to idle items when their price is still significantly displaced from baseline after several quiet cycles. Allows the market to correct old shocks faster without affecting actively traded items.
+The stronger mean reversion value used during idle recovery.
 
 ---
 
 ## Economy template
 
 ### Template
-A preset collection of default values for the pricing engine. Selecting a template in `config.yml` sets sensible defaults for sigma, gamma, vref, max variation, and price factors without requiring manual tuning of every parameter. Available templates: `STABLE`, `BALANCED`, `VOLATILE`, `HARDCORE`.
+A predefined market behavior profile such as `STABLE`, `BALANCED`, `VOLATILE`, or `HARDCORE`.
 
 ### Overrides
-Configuration blocks in `config.yml` that let you customize specific values within a selected template. Overrides only affect the values you specify — all other template values remain unchanged.
+Configuration blocks that customize specific template values without replacing the whole template.
 
 ---
 
 ## Persistence and recovery
 
 ### Market state (`market-state.yml`)
-The authoritative persisted record of the current market. Stores the current price of every item, each item's idle cycle count, the current generation number, and a summary of the last completed cycle. Written after every successful cycle and on server shutdown.
+The authoritative persisted market state written after successful cycles.
 
 ### Cycle checkpoint (`cycle-checkpoint.yml`)
-A write-ahead record of a cycle that has been fully calculated but not yet completely committed. Written before `market-state.yml` is updated. If the server crashes between writing the checkpoint and updating the market state, DynaTrade recovers the checkpoint on the next startup and completes the commit.
+A prepared cycle result written before the final state commit.
 
 ### Checkpoint recovery
-The startup procedure where DynaTrade detects a prepared checkpoint and completes the cycle commit that was interrupted. This ensures no cycle result is silently lost after a crash.
+The startup process that completes a previously prepared cycle commit after an interrupted shutdown.
 
 ### Quarantine
-When an auxiliary recovery file (`pending-signals.yml`, `pending-signals.log`, or `cycle-checkpoint.yml`) is malformed or structurally inconsistent, DynaTrade skips it and logs a warning rather than crashing or silently discarding it. The plugin continues from the last clean `market-state.yml`.
+The recovery behavior that skips malformed auxiliary files instead of crashing the runtime.
 
 ### Fail-safe
-If `market-state.yml` itself is critically invalid (corrupted, truncated, or structurally broken), DynaTrade refuses to start the market runtime rather than silently resetting the economy to base prices. The admin is expected to intervene.
-
----
-
-## Market categories
-
-### Category
-A market group that items belong to. Each category has a configurable price multiplier and can have its own sigma, vref, inactive-gamma, and idle-cycle-threshold overrides. The six categories are:
-
-| Category | Icon | Default multiplier |
-|---|---|---|
-| Mining | Iron Pickaxe | ×1.2 |
-| Agriculture | Wheat | ×1.0 |
-| Miscellaneous | Bundle | ×1.5 |
-| Building | Bricks | ×1.0 |
-| Magic | Blaze Rod | ×2.0 |
-| Alchemy | Glass Bottle | ×1.3 |
-
-The category multiplier is applied to `base-price` to determine the effective starting market price before any dynamic movement occurs.
-
+The startup behavior that refuses to silently reset the economy when `market-state.yml` is critically invalid.

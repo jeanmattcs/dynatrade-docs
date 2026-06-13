@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.7.0`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.8.1`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -13,6 +13,12 @@ DynaTrade was exercised across three broad areas:
 - burst behavior when the Bukkit main-thread apply queue becomes saturated
 
 The goal was not just to confirm happy-path trades, but to verify durability, restart safety, and operator-facing behavior under pressure.
+
+Additional validation for the current line also covered:
+
+- player-aware pressure normalization as base pricing behavior
+- active participation reach refinement for full-confidence cycles
+- runtime field validation with real player-backed trades through Paper + Mineflayer
 
 ---
 
@@ -88,6 +94,23 @@ For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rat
 
 ---
 
+## Pricing validation highlights
+
+The current `0.8.1` line includes dedicated validation for the participation-aware pricing path:
+
+- `1` player selling the same volume produces weaker adjusted pressure than multiple players selling that same total volume
+- the dominant-side player count is direction-aware: buy pressure uses buyers, sell pressure uses sellers
+- transactions without player identity preserve the old raw-pressure behavior
+- recovery, replay, and pending payload restore remain volume-only and preserve the old fallback behavior
+- active participation reach keeps `4/4` at full confidence but softens `4/30`
+
+Recent runtime field validation also captured the full live path:
+
+- one-player sell case: `sellUniquePlayers=1`, `participationFactor=0.25`
+- four-player equal-volume sell case: `sellUniquePlayers=4`, stronger adjusted pressure than the one-player case
+- next cycle reset confirmed that participation stays cycle-local
+- volume-only startup restore confirmed `adjustedPressure == rawPressure`
+
 ## Recommendations
 
 - Normal operation: no tuning is needed.
@@ -99,7 +122,7 @@ For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rat
 
 ## Release position
 
-The current `0.7.0` line is production-ready for the validated profile:
+The current `0.8.1` line is validated for the documented profile:
 
 - sustained load around `100 trades/s`
 - zero integrity drift in the nominal benchmark

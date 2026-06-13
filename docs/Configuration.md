@@ -119,6 +119,61 @@ Idle recovery helps stale items move back toward their baseline when they have b
 
 ---
 
+### Player-aware pressure calibration
+
+```yaml
+pricing:
+  player-aware-pressure:
+    target-participation-players: 4
+    min-participation-factor: 0.25
+    active-participation-reach:
+      enabled: true
+      min-active-reach-factor: 0.50
+      active-participant-floor: 4
+      active-participant-cap: 30
+      reach-weight: 0.25
+```
+
+Player-aware pressure normalization is part of DynaTrade's base pricing model. It does not need to be enabled.
+
+The top-level values tune the base participation normalization:
+
+| Key | Meaning |
+| --- | --- |
+| `target-participation-players` | Unique players on the dominant pressure side needed for full pressure in one cycle |
+| `min-participation-factor` | Minimum pressure factor when participation data exists but is below the target |
+
+Default behavior:
+
+| Unique players | Pressure factor |
+| ---: | ---: |
+| 1 | `0.25` |
+| 2 | `0.50` |
+| 3 | `0.75` |
+| 4+ | `1.00` |
+
+When participation data is not available, DynaTrade uses the original raw pressure unchanged. This covers recovery replay, older aggregate signals, and internal signals without player identity.
+
+The nested `active-participation-reach` block tunes the additional reach refinement:
+
+| Key | Meaning |
+| --- | --- |
+| `enabled` | Enables or disables only the active-reach refinement layer |
+| `min-active-reach-factor` | Lower bound for the active-reach factor |
+| `active-participant-floor` | Minimum active-economy participant count considered by the reach layer |
+| `active-participant-cap` | Maximum active-economy participant count considered by the reach layer |
+| `reach-weight` | How strongly active reach influences the final factor |
+
+Important behavior:
+
+- `enabled: false` disables only the E-15A.2 reach layer
+- base player-aware normalization remains part of pricing behavior
+- the reach layer only refines cycles that already reached full participation confidence
+- invalid or unavailable active-participant data falls back automatically to the base participation result
+
+With the current defaults, `4/4` active participants stays at full confidence while `4/30` is softened to a final factor of `0.875`.
+
+---
 ### Operational logs
 
 ```yaml
@@ -139,7 +194,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.7.0` production line includes bounded main-thread apply draining for durable trades.
+The `0.8.1` line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -264,6 +319,15 @@ economy:
 pricing:
   buy-spread: 0.06
   sell-spread: 0.10
+  player-aware-pressure:
+    target-participation-players: 4
+    min-participation-factor: 0.25
+    active-participation-reach:
+      enabled: true
+      min-active-reach-factor: 0.50
+      active-participant-floor: 4
+      active-participant-cap: 30
+      reach-weight: 0.25
 
 apply:
   max-per-tick: 8
