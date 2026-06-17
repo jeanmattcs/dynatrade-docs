@@ -194,7 +194,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.8.1` line includes bounded main-thread apply draining for durable trades.
+The `0.8.2` line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -215,6 +215,110 @@ Validated production defaults:
 - `drain-deadline-ms: 15`
 
 Change these only if you are actively benchmarking your own environment.
+
+---
+
+### Trade admission control
+
+The current runtime also includes overload protection for accepted-but-not-yet-applied trades.
+
+```yaml
+trade:
+  admission:
+    enabled: true
+    max-pending-applies-global: 5000
+    max-pending-applies-per-player: 50
+    reject-when-full: true
+    backlog-guard:
+      enabled: true
+      reject-when-backlog-above: 4500
+      accept-when-backlog-below: 2500
+```
+
+What these do:
+
+| Key | Meaning |
+| --- | --- |
+| `enabled` | Turns admission control on or off |
+| `max-pending-applies-global` | Hard cap for pending applies across the whole server |
+| `max-pending-applies-per-player` | Per-player cap for pending applies |
+| `reject-when-full` | Rejects new trades instead of allowing unbounded queue growth |
+| `backlog-guard.*` | Hysteresis guard that rejects while backlog is high and reopens when it falls |
+
+Recommended posture:
+
+- keep these defaults unless you are running your own load validation
+- treat this as server protection, not economy tuning
+
+---
+
+### Momentum signal
+
+The current runtime can compute a recent-cycle momentum signal per item.
+
+```yaml
+momentum:
+  enabled: true
+  window_size: 3
+  smoothing_alpha: 0.7
+  sensitivity: 0.20
+  max_change_per_cycle: 0.30
+```
+
+Important:
+
+- this signal does not change the core market price directly
+- it exists to summarize recent cycle direction in a bounded way
+- it is consumed by the optional quote-adjustment layer when that layer is enabled
+
+---
+
+### Optional quote-adjustment layer
+
+The current config still uses the internal compatibility key `premium`, but this is best understood as an optional quote-adjustment layer.
+
+```yaml
+premium:
+  momentum-spread:
+    enabled: false
+    tau-base: 0.05
+    tau-min: 0.01
+    tau-max: 0.20
+    k-sell: 0.10
+    k-buy: 0.10
+```
+
+What this means:
+
+- disabled by default
+- can widen or tighten buy and sell spreads using the momentum signal
+- does not alter the core economic market price
+
+If you do not need this behavior yet, leave it disabled.
+
+---
+
+### Observability toggles
+
+The current runtime also includes optional admin-facing visibility toggles.
+
+```yaml
+observability:
+  admin-internal-status-enabled: false
+  admin-benchmark-status-enabled: false
+```
+
+What these do:
+
+| Key | Meaning |
+| --- | --- |
+| `admin-internal-status-enabled` | Adds queue, backlog, and backpressure details to `/dt status` |
+| `admin-benchmark-status-enabled` | Adds benchmark-oriented internal timing output to `/dt status` |
+
+Recommended posture:
+
+- leave both off in normal operation
+- enable them only during diagnostics or controlled validation
 
 ---
 

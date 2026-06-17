@@ -8,8 +8,8 @@ This page covers every step required to install DynaTrade, verify that it is run
 
 | Requirement | Version | Notes |
 |---|---|---|
-| **Paper** | 1.21.x | Built and validated against Paper API 1.21.4. Other Bukkit-family servers are not part of the current validated surface. |
-| **Java** | 21 | Required by Paper 1.21.x. |
+| **Spigot or Paper** | 1.21.x | Built against Spigot API `1.21.4-R0.1-SNAPSHOT` and validated on `Spigot 1.21.4` and `Paper 1.21.4`. |
+| **Java** | 21 | Required by the current validated runtime baseline. |
 | **Vault** | Any current release | Required for economy integration. DynaTrade declares Vault as a soft dependency - the plugin loads without it, but buy and sell commands are disabled until Vault and an economy provider are present. |
 | **Economy provider** | Any Vault-compatible | [EssentialsX](https://essentialsx.net/) is the recommended option. |
 
@@ -134,7 +134,7 @@ New versions may add new keys to `config.yml`, `items.yml`, `items_pt.yml`, or t
 - New optional keys will be missing from your file - DynaTrade will use internal defaults for any missing key, so nothing will break.
 - If you want to use a new feature, add the corresponding key to your file manually.
 
-For the current `0.8.1` line, pay special attention to the `apply:` section. Older configs may not include it yet.
+For the current `0.8.2` line, pay special attention to the `apply:`, `trade.admission:`, and `observability:` sections. Older configs may not include them yet.
 
 ### After a major version change
 

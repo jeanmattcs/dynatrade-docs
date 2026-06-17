@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.8.1`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.8.2`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -96,7 +96,7 @@ For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rat
 
 ## Pricing validation highlights
 
-The current `0.8.1` line includes dedicated validation for the participation-aware pricing path:
+The current `0.8.2` line includes dedicated validation for the participation-aware pricing path:
 
 - `1` player selling the same volume produces weaker adjusted pressure than multiple players selling that same total volume
 - the dominant-side player count is direction-aware: buy pressure uses buyers, sell pressure uses sellers
@@ -116,13 +116,13 @@ Recent runtime field validation also captured the full live path:
 - Normal operation: no tuning is needed.
 - High-volume servers: consider increasing `apply.max-per-tick` to `12` after staged validation.
 - Extreme burst events: temporary confirmation latency is expected while the apply queue drains.
-- Long-term scaling: admission control and durability-side backpressure belong to a later milestone.
+- Long-term scaling: use the current `trade.admission.*` settings and validate any changes under load before widening the limits.
 
 ---
 
 ## Release position
 
-The current `0.8.1` line is validated for the documented profile:
+The current `0.8.2` line is validated for the documented profile:
 
 - sustained load around `100 trades/s`
 - zero integrity drift in the nominal benchmark

@@ -15,6 +15,12 @@ Before installing DynaTrade, make sure you have:
 
 > DynaTrade will load without an economy provider, but buy and sell commands will be disabled until one is detected. The `/market` GUI and `/price` command will still work.
 
+Current status:
+
+- version: `0.8.2`
+- public status: `Technical Preview`
+- runtime status: usable for controlled evaluation
+
 ---
 
 ## Installation steps

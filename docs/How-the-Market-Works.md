@@ -56,7 +56,7 @@ Signals are held in the transaction buffer until the next cycle runs. At cycle t
 
 DynaTrade also considers how many unique players contributed to the dominant side of that pressure in the current cycle.
 
-This is base pricing behavior in the current `0.8.1` line:
+This is base pricing behavior in the current `0.8.2` line:
 
 - if valid participation data exists, pressure is normalized automatically
 - if participation data is missing or invalid, raw pressure is preserved exactly
@@ -64,6 +64,8 @@ This is base pricing behavior in the current `0.8.1` line:
 This lets DynaTrade distinguish one-player bulk volume from broader server participation with the same total volume.
 
 The current line also includes active participation reach. Once the cycle already has full participation confidence, DynaTrade can soften that confidence when the same unique-player count represents only a small share of the currently active economy participants.
+
+Separately, the current runtime can also compute a momentum signal from recent completed cycles. That signal does not change the core market price by itself. It is used only by the optional quote-adjustment layer when that layer is enabled.
 
 ---
 
