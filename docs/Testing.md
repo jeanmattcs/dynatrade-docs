@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.8.2`, the load profile used during release hardening, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.8.2`, the recorded validation material, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -22,22 +22,22 @@ Additional validation for the current line also covered:
 
 ---
 
-## Validated load profile
+## Validation posture
 
-DynaTrade is validated for sustained load up to roughly `100 trades/s` with sub-`500ms` p50 latency and zero integrity drift.
+DynaTrade has recorded local load, race, recovery, and burst-behavior evidence for the `0.8.2` technical preview line.
 
-This comfortably covers normal server operation.
+Those artifacts are environment-dependent. Public documentation should treat them as operator validation material, not as fixed release-performance guarantees.
 
 ### Validated scenarios
 
 | Load | Throughput | p50 | Success | Delta |
 |---|---:|---:|---:|---:|
-| `50` bots / `500` trades | `100-120/s` | `358-440ms` | `100%` | `0` |
-| `50` bots / `1000` trades | `13-16/s` degraded | `~381ms` | `~75%` | non-zero |
+| Controlled nominal profile | recorded in validation materials | recorded in validation materials | see current evidence | see current evidence |
+| Overload and burst profiles | recorded in validation materials | recorded in validation materials | environment-dependent | environment-dependent |
 
 ### What passed cleanly
 
-- `50/500` load benchmark with zero drift
+- nominal load validation is documented separately in the validation set
 - smoke validation for startup, trade flow, reload, restart, and fail-safe state blocking
 - race benchmark with `50` concurrent bots and `500` total trades
 - crash recovery benchmark with forced process kill and post-restart `delta = 0`
@@ -80,9 +80,9 @@ This defines a **throughput ceiling** for the current pipeline rather than a nor
 
 ## How to interpret `delta`
 
-For the validated `50/500` scenario, `delta = 0` and should be treated as the primary production-ready benchmark.
+For any nominal validation scenario, `delta = 0` remains the primary correctness signal.
 
-For the overload `50/1000` scenario, non-zero delta should be interpreted carefully:
+For overload scenarios, non-zero delta should be interpreted carefully:
 
 - it shows that the cycle processed a different volume snapshot than the benchmark counted as acknowledged within its timeout window
 - it does **not** automatically mean journal corruption
@@ -122,11 +122,11 @@ Recent runtime field validation also captured the full live path:
 
 ## Release position
 
-The current `0.8.2` line is validated for the documented profile:
+The current `0.8.2` line is documented with:
 
-- sustained load around `100 trades/s`
-- zero integrity drift in the nominal benchmark
-- stable restart and recovery behavior
+- recorded local validation material
+- stable restart and recovery behavior in the documented runs
+- known burst-latency limits under heavy apply-queue pressure
 
 The known limit is burst latency under extreme apply-queue pressure, which is documented here rather than treated as a blocker for ordinary server operation.
 

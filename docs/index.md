@@ -32,7 +32,7 @@ Current status:
 
 High-level trade flow:
 
-`/buy or /sell -> validation -> durable journal batch -> runtime apply -> transaction buffer -> pricing cycle`
+`/buy or /sell -> validation -> durable journal batch -> transaction buffer -> apply queue -> Bukkit apply -> pricing cycle`
 
 What this means in practice:
 
@@ -56,18 +56,11 @@ The documented validated surface is `Spigot 1.21.4` and `Paper 1.21.4`.
 
 ---
 
-## Validated load profile
+## Validation position
 
-Recent validation on the current production runtime used:
+The current `0.8.2` line has recorded local smoke, benchmark, and recovery evidence, but those artifacts are environment-specific and should be read from the current validation materials rather than from fixed public summary numbers.
 
-- `50` bots
-- `500` trades
-- `500/500` succeeded
-- `integrity.totalVolumeDelta = 0`
-
-Recent valid runs landed around the `89-107 trades/s` range, with repeated confirmation runs averaging above `95/s`.
-
-This is enough to treat the current `0.8.2` line as a validated runtime for the documented local profile rather than as an unvalidated milestone build.
+This is enough to treat the line as a technical preview runtime for controlled evaluation, not as a broad public performance guarantee.
 
 ---
 

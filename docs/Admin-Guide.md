@@ -96,7 +96,7 @@ The new item will start at its configured base price and begin accumulating mark
 1. Remove the item entry from `items.yml`.
 2. Run `/dt reload`.
 
-Any pending signals for that item are discarded. The item will no longer appear in the GUI or respond to commands.
+Current reload behavior is more conservative than a hard discard. If valid pending signals for the removed item still exist during reload, DynaTrade can preserve the legacy item definition long enough to recover that pending work safely. After that recovery window, the removed item no longer appears in the GUI or responds to commands.
 
 ---
 

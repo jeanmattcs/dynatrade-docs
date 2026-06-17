@@ -112,7 +112,14 @@ Sells items to the market at the current sell price.
 
 ## Admin commands
 
-All admin commands are grouped under `/dt`, which acts as the operator root command for diagnostics, reloads, and manual cycle control. The `dynatrade.admin` permission is required for the standard `/dt` subcommands. The destructive reset flow is intentionally split into the separate `dynatrade.admin.reset` permission.
+All admin commands are grouped under `/dt`, which acts as the operator root command for diagnostics, reloads, and manual cycle control.
+
+Important runtime detail:
+
+- `plugin.yml` does not declare a Bukkit permission node on the root `/dt` command itself
+- `/dt` and `/dt help` can therefore be reached at the command-root level
+- the admin gate is applied in code for the protected subcommands such as `/dt status`, `/dt item`, `/dt reload`, and `/dt cycle`
+- the destructive reset flow is intentionally split into the separate `dynatrade.admin.reset` permission
 
 ---
 
@@ -120,7 +127,12 @@ All admin commands are grouped under `/dt`, which acts as the operator root comm
 
 Shows a summary of available `/dt` subcommands.
 
-**Permission:** `dynatrade.admin`
+**Permission:** no Bukkit command-level permission on the root help path
+
+Behavior:
+
+- `/dt` and `/dt help` show the public help lines to any sender
+- admin-only help lines are added only when the sender also has `dynatrade.admin`
 
 Use this first if a staff member has access to `/dt` but is not sure which operational actions are available on the current server.
 
@@ -248,8 +260,8 @@ Performs a full reset of the dynamic market state, restoring base prices from `i
 | `dynatrade.price` | `true` | `/price` |
 | `dynatrade.buy` | `true` | `/buy` |
 | `dynatrade.sell` | `true` | `/sell` |
-| `dynatrade.admin` | `op` | `/dt status`, `/dt item`, `/dt reload`, `/dt cycle`, `/dt help` |
+| `dynatrade.admin` | `op` | `/dt status`, `/dt item`, `/dt reload`, `/dt cycle`, plus admin-only help lines under `/dt help` |
 | `dynatrade.admin.reset` | `op` | `/dt reset` |
 
-The `dynatrade.admin` node is the main gate for `/dt` administration. It is appropriate for trusted staff who need to inspect the economy, reload config, or force a cycle. The `dynatrade.admin.reset` permission is intentionally separate so only owners or senior administrators can wipe the market state.
+The `dynatrade.admin` node is the main gate for protected `/dt` administration subcommands. It is appropriate for trusted staff who need to inspect the economy, reload config, or force a cycle. The `dynatrade.admin.reset` permission is intentionally separate so only owners or senior administrators can wipe the market state.
 

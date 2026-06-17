@@ -165,6 +165,8 @@ Player buys or sells
   -> trade is validated and executed
   -> accepted trade is journaled durably
   -> signal enters the in-memory transaction buffer
+  -> durable runtime apply is queued
+  -> Bukkit-side apply completes
   -> next cycle drains the buffer
   -> pricing pipeline runs per item
   -> cycle checkpoint is written
