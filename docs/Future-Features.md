@@ -13,6 +13,7 @@ The current `0.8.2` technical preview already includes:
 - durable journaling and restart recovery
 - bounded apply backpressure
 - player-aware pressure normalization and active participation reach
+- minimal effectiveVref calibration in the current pricing runtime
 - momentum signal generation and an optional quote-adjustment layer
 - trade admission control
 
@@ -30,7 +31,7 @@ That means:
 
 Future work is expected to focus on:
 
-- better market interpretation and calibration
+- better market interpretation and calibration beyond the current minimal effectiveVref calibration
 - stronger operator diagnostics
 - broader market summaries and visibility
 - more validation and release hardening

@@ -18,6 +18,7 @@ Additional validation for the current line also covered:
 
 - player-aware pressure normalization as base pricing behavior
 - active participation reach refinement for full-confidence cycles
+- `E-15B` MVP Phase 1 implemented and validated as minimal effectiveVref calibration
 - runtime field validation with real player-backed trades through Paper + Mineflayer
 
 ---
@@ -110,6 +111,29 @@ Recent runtime field validation also captured the full live path:
 - four-player equal-volume sell case: `sellUniquePlayers=4`, stronger adjusted pressure than the one-player case
 - next cycle reset confirmed that participation stays cycle-local
 - volume-only startup restore confirmed `adjustedPressure == rawPressure`
+
+## Minimal effectiveVref calibration validation
+
+The current `0.8.2` line also includes focused validation for `E-15B` MVP Phase 1.
+
+Validated evidence in the current repository covers:
+
+- disabled calibration fallback
+- high-volume `effectiveVref` behavior
+- low-volume `configuredVref` fallback
+- EMA smoothing
+- cap behavior
+- restart-safe empty state
+- config parsing and safe defaults
+- focused tests plus a recorded full test-suite pass
+
+The current public validation surface does not claim implementation of:
+
+- `riskScore`
+- volatility profiles
+- thin-market detection
+- `adaptiveSpreadBonus`
+- admin calibration diagnostics
 
 ## Recommendations
 

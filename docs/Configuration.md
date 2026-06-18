@@ -119,7 +119,7 @@ Idle recovery helps stale items move back toward their baseline when they have b
 
 ---
 
-### Player-aware pressure calibration
+### Player-aware pressure normalization
 
 ```yaml
 pricing:
@@ -172,6 +172,35 @@ Important behavior:
 - invalid or unavailable active-participant data falls back automatically to the base participation result
 
 With the current defaults, `4/4` active participants stays at full confidence while `4/30` is softened to a final factor of `0.875`.
+
+---
+### Minimal effectiveVref calibration
+
+The current `0.8.2` technical preview also includes `E-15B` MVP Phase 1 implemented as minimal effectiveVref calibration.
+
+```yaml
+pricing:
+  calibration:
+    enabled: true
+    smoothing-alpha: 0.25
+    max-effective-vref-multiplier: 8
+```
+
+What this does today:
+
+- keeps common high-volume items from overreacting to normal volume
+- updates calibration only during pricing cycles
+- falls back to configured `vref` when calibration is disabled, missing, or empty after restart
+
+What it does not do today:
+
+- no `riskScore`
+- no volatility profiles
+- no thin-market detection
+- no `adaptiveSpreadBonus`
+- no admin calibration diagnostics
+
+This is intentionally a bounded MVP slice. Remaining `E-15B` scope is future work.
 
 ---
 ### Operational logs
