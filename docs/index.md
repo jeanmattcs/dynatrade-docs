@@ -11,6 +11,7 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 Highlights of the current line:
 
 - durable pending-trade journaling with stronger restart recovery
+- apply-before-signal ordering and recovery-aware pending item delivery
 - async durability batching and cycle persistence off the Bukkit thread
 - bounded main-thread apply backpressure for burst load
 - trade admission control for overload protection
@@ -32,14 +33,18 @@ Current status:
 
 High-level trade flow:
 
-`/buy or /sell -> validation -> durable journal batch -> transaction buffer -> apply queue -> Bukkit apply -> pricing cycle`
+`/buy or /sell -> validation/admission -> apply queue -> economy/inventory apply -> durable journal -> transaction buffer -> pricing cycle`
 
 What this means in practice:
 
 - players still receive normal command and GUI feedback
-- accepted trades are made durable before runtime side effects are considered complete
+- market signals are made durable only after the real economy/inventory apply succeeds
 - the market still moves in cycles, not per click
 - the Bukkit thread is protected from the worst disk and burst-apply pressure
+
+If apply succeeds but market journaling fails, the player effect remains and the price signal is omitted. This avoids recovery replaying pressure for a trade that never happened.
+
+See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md) for pending delivery states, partial delivery behavior, sell compensation, and operator procedures.
 
 On restart, the last confirmed market state is restored. If `market-state.yml` is critically invalid, DynaTrade blocks startup rather than silently resetting prices.
 

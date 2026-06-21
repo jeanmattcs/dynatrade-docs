@@ -139,6 +139,7 @@ After every cycle, DynaTrade writes state to disk:
 | `pending-signals.yml` | Snapshot of accepted but not yet processed signals |
 | `pending-signals.log` | Append-only accepted trade journal for recovery |
 | `cycle-checkpoint.yml` | Write-ahead record of a prepared cycle result |
+| `pending-deliveries.yml` | Unresolved purchase and sell-compensation item obligations |
 
 Do not edit these files manually.
 
@@ -151,6 +152,7 @@ On startup, DynaTrade:
 1. Loads the last confirmed `market-state.yml`
 2. Checks for a prepared `cycle-checkpoint.yml`
 3. Restores accepted trade signals from `pending-signals.log` when needed
+4. Converts stale item-delivery `IN_PROGRESS` records to `MANUAL_REVIEW`
 
 If `market-state.yml` is critically invalid, DynaTrade does not silently reset the economy. It blocks startup of the market runtime instead.
 
@@ -162,11 +164,11 @@ Malformed auxiliary recovery files are quarantined instead of crashing the runti
 
 ```text
 Player buys or sells
-  -> trade is validated and executed
-  -> accepted trade is journaled durably
+  -> trade is validated and admitted
+  -> runtime apply is queued with a per-player UUID lock
+  -> Vault and Bukkit-side apply completes
+  -> the applied trade is journaled durably
   -> signal enters the in-memory transaction buffer
-  -> durable runtime apply is queued
-  -> Bukkit-side apply completes
   -> next cycle drains the buffer
   -> pricing pipeline runs per item
   -> cycle checkpoint is written
@@ -184,3 +186,6 @@ Player buys or sells
 - Player participation can soften that pressure automatically
 - Active participation reach can refine fully-saturated participation
 - Recovery preserves accepted trades across restarts and crashes
+- Ambiguous item delivery is held for manual review instead of automatic duplication
+
+See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md) for the rationale and accepted trade-offs.

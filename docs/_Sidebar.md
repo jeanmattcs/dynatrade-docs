@@ -7,6 +7,7 @@
 
 **Understanding the market**
 - [How the Market Works](How-the-Market-Works.md)
+- [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md)
 - [GUI Guide](GUI-Guide.md)
 
 **Reference**

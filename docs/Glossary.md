@@ -16,10 +16,28 @@ An internal record of trade activity for one item and one direction. Signals alw
 The in-memory structure that accumulates signals between cycles. It also tracks unique player participation per item and side for the current cycle only.
 
 ### Pending signals
-Signals that were accepted and journaled but have not yet been absorbed by a completed cycle.
+Signals for successfully applied trades that were journaled but have not yet been absorbed by a completed cycle.
 
 ### Accepted trade journal (`pending-signals.log`)
-The append-only durability log for accepted trades. It is used for crash recovery.
+The append-only durability log for successfully applied trades. It is written before the signal enters the transaction buffer and is used for crash recovery.
+
+### Pending delivery (`pending-deliveries.yml`)
+A durable item obligation created for a purchase or sell compensation that is not yet conclusively complete.
+
+### `PENDING`
+A delivery state that is safe for automatic retry because no inventory mutation is known to have started.
+
+### `IN_PROGRESS`
+The state persisted immediately before inventory mutation. A stale `IN_PROGRESS` becomes `MANUAL_REVIEW` after restart.
+
+### `PARTIAL`
+A delivery state containing only the exact quantity that Bukkit did not accept.
+
+### `MANUAL_REVIEW`
+An ambiguous delivery that may already have changed the inventory. It is not retried automatically.
+
+### `REFUND_FAILED`
+A high-priority log outcome indicating that sell compensation could not be made durable.
 
 ---
 
