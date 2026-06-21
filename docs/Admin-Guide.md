@@ -211,6 +211,17 @@ This is a fail-safe condition. DynaTrade has detected that the primary state fil
 | `pending-signals.yml` | **No** | Pending trade signal snapshot |
 | `pending-signals.log` | **No** | Accepted trade journal (append-only) |
 | `cycle-checkpoint.yml` | **No** | Write-ahead checkpoint for crash recovery |
+| `pending-deliveries.yml` | **No** | Pending, partial, or manual-review item delivery obligations |
+
+### Pending delivery incidents
+
+`MANUAL_REVIEW` means the inventory may already have changed and DynaTrade cannot prove the final outcome. It is intentionally excluded from automatic retry.
+
+Do not change `MANUAL_REVIEW` to `PENDING` on a running server. Stop the server, back up the file and logs, and verify player inventory/economy evidence before manual resolution.
+
+`REFUND_FAILED` means a sell compensation could not be persisted. Record the operation ID, player UUID, item, quantity, and reason; fix storage or capacity first; then verify that compensation was not already delivered before taking manual action.
+
+See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md#operator-response) for the complete procedure.
 
 ---
 

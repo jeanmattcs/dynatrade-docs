@@ -169,7 +169,8 @@ plugins/DynaTrade/
 |- market-state.yml     <- live market state - do not edit manually
 |- pending-signals.yml  <- pending signal snapshot - do not edit manually
 |- pending-signals.log  <- accepted trade journal - do not edit manually
-\- cycle-checkpoint.yml <- write-ahead checkpoint - do not edit manually
+|- cycle-checkpoint.yml <- write-ahead checkpoint - do not edit manually
+\- pending-deliveries.yml <- unresolved item deliveries - do not edit manually
 ```
 
 The files marked "do not edit manually" are managed exclusively by DynaTrade. Manual edits to those files risk corrupting the market state. See [Admin Guide](Admin-Guide.md#file-reference) for more details.

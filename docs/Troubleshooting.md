@@ -136,6 +136,46 @@ This is expected defensive behavior. No action is required unless you observe a 
 
 ---
 
+## Pending delivery requires manual review
+
+**Symptoms:**
+- Console contains `delivery requires manual review`
+- `pending-deliveries.yml` contains `status: MANUAL_REVIEW`
+
+**Cause:**
+DynaTrade persisted `IN_PROGRESS` before inventory mutation, but could not prove the final inventory result after a crash, exception, or persistence failure.
+
+**Resolution:**
+1. Do not change the state back to `PENDING` while the server is running.
+2. Preserve the delivery file and relevant logs.
+3. Stop the server before any manual file action.
+4. Compare the delivery ID, player UUID, item, quantity, reason, and timestamps with inventory/economy evidence.
+5. Resolve conservatively and verify the player has not already received the items.
+
+The current release intentionally has no automatic retry or admin resolution command for this state. See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md#operator-response).
+
+---
+
+## Sell compensation reports REFUND_FAILED
+
+**Symptoms:**
+- Console contains `REFUND_FAILED`
+- A failed sell did not immediately return the removed items
+
+**Cause:**
+DynaTrade could not persist a durable sell-compensation delivery. Common causes include storage failure or the total delivery capacity of `500` being exhausted.
+
+**Resolution:**
+1. Record the operation ID, player UUID, item, quantity, and reason.
+2. Check free disk space and filesystem permissions.
+3. Inspect `pending-deliveries.yml` and current delivery load.
+4. Fix the storage or capacity problem before manual compensation.
+5. Verify that the items were not already delivered before granting replacements.
+
+Do not treat this as notification-only logging. It represents an unresolved economic obligation.
+
+---
+
 ## Heavy trading feels delayed during bursts
 
 **Symptoms:**
