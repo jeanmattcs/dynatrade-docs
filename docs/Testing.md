@@ -20,6 +20,15 @@ Additional validation for the current line also covered:
 - active participation reach refinement for full-confidence cycles
 - `E-15B` MVP Phase 1 implemented and validated as minimal effectiveVref calibration
 - runtime field validation with real player-backed trades through Paper + Mineflayer
+- apply-before-signal trade ordering and journal-failure behavior
+- pending delivery restart, partial-leftover, and concurrent-event behavior
+- sell compensation, item metadata policy, UUID lock cleanup, and delivery capacity
+
+Latest automated baseline:
+
+- `354` tests across `52` suites
+- `0` failures and `0` errors
+- clean Java 21 compilation
 
 ---
 
@@ -44,6 +53,10 @@ Those artifacts are environment-dependent. Public documentation should treat the
 - crash recovery benchmark with forced process kill and post-restart `delta = 0`
 - reset benchmark covering `/dt reset`, state wipe, and post-reset trade viability
 - audit-driven brutal-load validation with `100` bots / `1000` fire-and-forget commands, recovery OK, and post-drain `delta = 0`
+- stale `IN_PROGRESS` recovery to non-retryable `MANUAL_REVIEW`
+- partial delivery persistence without automatic full refund
+- concurrent join/inventory-close events without duplicate delivery
+- rejection at the `400` normal and `500` total delivery limits
 
 ---
 
@@ -151,6 +164,13 @@ The current `0.8.2` line is documented with:
 - recorded local validation material
 - stable restart and recovery behavior in the documented runs
 - known burst-latency limits under heavy apply-queue pressure
+- automated trade-consistency coverage for delivery recovery, rollback, item policy, capacity, and UUID locks
+
+Not yet proven by public field evidence:
+
+- a real Paper crash matrix at every `pending-deliveries.yml` persistence boundary
+- long-duration delivery persistence behavior on slow disks
+- an admin resolution workflow for `MANUAL_REVIEW`
 
 The known limit is burst latency under extreme apply-queue pressure, which is documented here rather than treated as a blocker for ordinary server operation.
 
