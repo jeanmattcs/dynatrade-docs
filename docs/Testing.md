@@ -22,11 +22,11 @@ Additional validation for the current line also covered:
 - runtime field validation with real player-backed trades through Paper + Mineflayer
 - apply-before-signal trade ordering and journal-failure behavior
 - pending delivery restart, partial-leftover, and concurrent-event behavior
-- sell compensation, item metadata policy, UUID lock cleanup, and delivery capacity
+- sell compensation, staged runtime retry recovery, pending Vault credit, degraded reload handling, item metadata policy, UUID lock cleanup, and delivery capacity
 
 Latest automated baseline:
 
-- `354` tests across `52` suites
+- `364` tests across `56` suites
 - `0` failures and `0` errors
 - clean Java 21 compilation
 
