@@ -40,6 +40,10 @@ A healthy output looks like this:
 | **Checkpoint** | Should normally show `none`. A checkpoint present on startup means DynaTrade recovered a prepared cycle — this is expected after a crash. |
 | **Storage** | Should be `OK`. |
 
+If `/dt status` instead prints a degraded-state warning and stops there, the
+plugin no longer has an active runtime. Trades are unavailable and a full
+server restart is required.
+
 ### Checking a specific item: `/dt item <item>`
 
 ```
@@ -67,7 +71,17 @@ Use this to answer player questions about a specific item's price, trend, or lim
 3. Run `/dt status` — confirm the economy is `OK` and the scheduler is running.
 4. Test affected items with `/price <item>` or `/market`.
 
-`/dt reload` preserves the current in-memory market state. Prices are not reset. The reloaded configuration takes effect for the next cycle and any new trades.
+`/dt reload` preserves the current in-memory market state. Prices are not
+reset. The reloaded configuration takes effect for the next cycle and any new
+trades.
+
+Operationally, reload now does more than just rebuild config:
+
+- it closes new trade admission first;
+- drains in-flight apply and durability work for up to about 3 seconds;
+- persists the old runtime before the swap;
+- keeps the old runtime if the failure happens before the stop/swap boundary;
+- enters degraded mode if the failure happens only after the old runtime was already stopped.
 
 If you change `apply.max-per-tick` or `apply.drain-deadline-ms`, treat that as an operational tuning change. Reload applies it immediately, but you should still validate the result during a staged or real load test before leaving it in production.
 
@@ -79,7 +93,7 @@ If you change `apply.max-per-tick` or `apply.drain-deadline-ms`, treat that as a
 | Updating the language file | `/dt reload` |
 | Adding or removing items | `/dt reload` |
 | Updating the DynaTrade jar itself | Full server restart |
-| Recovering from a broken runtime | Full server restart (preferred) or `/dt reset` |
+| Recovering from a broken or degraded runtime | Full server restart (preferred) or `/dt reset` when the runtime still exists |
 
 ### Adding an item mid-session
 
@@ -211,7 +225,7 @@ This is a fail-safe condition. DynaTrade has detected that the primary state fil
 | `pending-signals.yml` | **No** | Pending trade signal snapshot |
 | `pending-signals.log` | **No** | Accepted trade journal (append-only) |
 | `cycle-checkpoint.yml` | **No** | Write-ahead checkpoint for crash recovery |
-| `pending-deliveries.yml` | **No** | Pending, partial, or manual-review item delivery obligations |
+| `pending-deliveries.yml` | **No** | Pending, partial, manual-review item deliveries, plus pending Vault-credit obligations |
 
 ### Pending delivery incidents
 
@@ -220,6 +234,10 @@ This is a fail-safe condition. DynaTrade has detected that the primary state fil
 Do not change `MANUAL_REVIEW` to `PENDING` on a running server. Stop the server, back up the file and logs, and verify player inventory/economy evidence before manual resolution.
 
 `REFUND_FAILED` means a sell compensation could not be persisted. Record the operation ID, player UUID, item, quantity, and reason; fix storage or capacity first; then verify that compensation was not already delivered before taking manual action.
+
+If the console reports degraded mode after `/dt reload`, do not keep issuing
+trade commands. The old runtime is already gone and a restart is required to
+rebuild the runtime safely.
 
 See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md#operator-response) for the complete procedure.
 

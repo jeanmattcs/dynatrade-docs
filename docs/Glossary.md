@@ -22,7 +22,16 @@ Signals for successfully applied trades that were journaled but have not yet bee
 The append-only durability log for successfully applied trades. It is written before the signal enters the transaction buffer and is used for crash recovery.
 
 ### Pending delivery (`pending-deliveries.yml`)
-A durable item obligation created for a purchase or sell compensation that is not yet conclusively complete.
+A durable runtime obligation file that can hold item deliveries for purchases or sell compensation, plus pending Vault-credit obligations for completed sell removals.
+
+### Pending runtime retry (`PENDING_RETRY`)
+A runtime-state record used when a prepared trade was admitted but not conclusively finished before shutdown or restart recovery.
+
+### `PRE_APPLY`
+A retry stage meaning no confirmed inventory or economy mutation has happened yet. The full trade can be retried conservatively later.
+
+### `VAULT_CREDIT_DUE`
+A retry stage meaning a sell already removed the items and recovery must only complete the pending Vault credit.
 
 ### `PENDING`
 A delivery state that is safe for automatic retry because no inventory mutation is known to have started.
@@ -34,7 +43,7 @@ The state persisted immediately before inventory mutation. A stale `IN_PROGRESS`
 A delivery state containing only the exact quantity that Bukkit did not accept.
 
 ### `MANUAL_REVIEW`
-An ambiguous delivery that may already have changed the inventory. It is not retried automatically.
+An ambiguous delivery or Vault-credit mutation that may already have changed player state. It is not retried automatically.
 
 ### `REFUND_FAILED`
 A high-priority log outcome indicating that sell compensation could not be made durable.

@@ -12,7 +12,11 @@ DynaTrade is configured through two main files plus optional language files.
 
 After editing any of these files, run `/dt reload`.
 
-Do not manually edit `market-state.yml`, `pending-signals.yml`, `pending-signals.log`, or `cycle-checkpoint.yml`. Those files contain live runtime state managed by DynaTrade.
+If `/dt status` later reports degraded mode after a failed reload, restart the
+server before resuming trading. That means the old runtime was already stopped
+and the replacement runtime could not be created.
+
+Do not manually edit `market-state.yml`, `pending-signals.yml`, `pending-signals.log`, `cycle-checkpoint.yml`, or `pending-deliveries.yml`. Those files contain live runtime state managed by DynaTrade.
 
 ---
 

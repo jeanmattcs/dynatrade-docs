@@ -11,7 +11,7 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 Highlights of the current line:
 
 - durable pending-trade journaling with stronger restart recovery
-- apply-before-signal ordering and recovery-aware pending item delivery
+- apply-before-signal ordering, staged runtime retry recovery, and recovery-aware pending item delivery / Vault credit
 - async durability batching and cycle persistence off the Bukkit thread
 - bounded main-thread apply backpressure for burst load
 - trade admission control for overload protection
@@ -44,7 +44,7 @@ What this means in practice:
 
 If apply succeeds but market journaling fails, the player effect remains and the price signal is omitted. This avoids recovery replaying pressure for a trade that never happened.
 
-See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md) for pending delivery states, partial delivery behavior, sell compensation, and operator procedures.
+See [Trade Consistency and Recovery](Trade-Consistency-and-Recovery.md) for pending retry stages, pending delivery states, pending Vault credit, sell compensation, and operator procedures.
 
 On restart, the last confirmed market state is restored. If `market-state.yml` is critically invalid, DynaTrade blocks startup rather than silently resetting prices.
 

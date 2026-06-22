@@ -80,7 +80,8 @@ After editing any configuration file, run:
 /dt reload
 ```
 
-DynaTrade will reload config, rebuild the runtime, and restore the persisted market state.
+DynaTrade will reload config, drain in-flight trade work conservatively,
+rebuild the runtime, and restore the persisted market state.
 
 ---
 
@@ -92,6 +93,10 @@ Once the server is running and the economy provider is connected:
 /dt status
 ```
 Shows the current health of the economy engine, the scheduler state, and how many items are tracked.
+
+If `/dt status` reports degraded mode instead of normal metrics, restart the
+server before continuing. That means the last reload failed after the old
+runtime had already been stopped.
 
 ```
 /price DIAMOND

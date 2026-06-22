@@ -136,6 +136,28 @@ This is expected defensive behavior. No action is required unless you observe a 
 
 ---
 
+## `/dt status` shows degraded mode
+
+**Symptoms:**
+- `/dt status` prints a degraded-state warning instead of the normal metrics
+- trades are unavailable after a failed `/dt reload`
+- console shows that the reload failed after the old runtime was stopped
+
+**Cause:**
+The plugin failed to create the replacement runtime after it had already
+stopped the previous one. DynaTrade intentionally does not keep running with a
+half-swapped runtime.
+
+**Resolution:**
+1. Record the reload error from the console.
+2. Fix the underlying configuration, file, or startup problem.
+3. Restart the full server.
+
+Do not keep retrying trade commands in degraded mode. Restart is the supported
+recovery action.
+
+---
+
 ## Pending delivery requires manual review
 
 **Symptoms:**

@@ -145,6 +145,7 @@ Shows the current health of the DynaTrade runtime.
 **Permission:** `dynatrade.admin`
 
 **Output includes:**
+- degraded-runtime warning when no active runtime exists
 - Economy provider status (connected or unavailable)
 - Scheduler status (running or stopped)
 - Time until the next scheduled cycle
@@ -188,10 +189,12 @@ Reloads configuration files and rebuilds the runtime.
 
 **What it does:**
 1. Reloads `config.yml`, `items.yml`, `items_pt.yml`, and the active language file
-2. Rebuilds the pricing runtime using the reloaded configuration
-3. Restores the current market state from `market-state.yml`
-4. Recovers any valid pending signals from the journal
-5. Preserves the previous runtime if critical state is found to be invalid
+2. Closes new trade admission and drains in-flight apply and durability work for up to about 3 seconds
+3. Persists the current runtime while the old runtime can still be kept active on failure
+4. Rebuilds the pricing runtime using the reloaded configuration
+5. Restores the current market state from `market-state.yml`
+6. Recovers any valid pending signals from the journal
+7. Preserves the previous runtime if the failure happens before the old runtime is stopped
 
 **When to use:**
 - After editing `config.yml`, `items.yml`, or `items_pt.yml`
@@ -201,6 +204,8 @@ Reloads configuration files and rebuilds the runtime.
 **Notes:**
 - In-memory prices are not reset by a reload. The persisted market state is restored as-is.
 - If `market-state.yml` is invalid, reload will not silently apply base prices. It will log the problem and preserve the previous runtime.
+- If runtime recreation fails only after the old runtime was already stopped, DynaTrade enters degraded mode and trades stay unavailable until a full restart.
+- `/dt reload` is synchronous in the current line and may block the main server thread briefly while it drains in-flight work.
 - This command requires `dynatrade.admin` because it changes live runtime behavior and should be limited to trusted operators.
 
 ---

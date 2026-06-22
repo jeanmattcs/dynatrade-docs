@@ -107,7 +107,11 @@ Open `plugins/DynaTrade/items.yml` to review the default item catalog. You can a
 
 If you run the server in Portuguese, you can also edit `plugins/DynaTrade/items_pt.yml` to override the bundled Portuguese item names without touching the pricing catalog.
 
-After any configuration change, run `/dt reload` - no restart required.
+After any configuration change, run `/dt reload` in normal cases.
+
+If `/dt status` later reports degraded mode after a failed reload, restart the
+server before resuming trading. That means the old runtime was already stopped
+and the replacement runtime could not be created.
 
 See [Configuration](Configuration.md) for a full reference.
 
@@ -170,7 +174,7 @@ plugins/DynaTrade/
 |- pending-signals.yml  <- pending signal snapshot - do not edit manually
 |- pending-signals.log  <- accepted trade journal - do not edit manually
 |- cycle-checkpoint.yml <- write-ahead checkpoint - do not edit manually
-\- pending-deliveries.yml <- unresolved item deliveries - do not edit manually
+\- pending-deliveries.yml <- unresolved item deliveries and pending Vault credits - do not edit manually
 ```
 
 The files marked "do not edit manually" are managed exclusively by DynaTrade. Manual edits to those files risk corrupting the market state. See [Admin Guide](Admin-Guide.md#file-reference) for more details.
