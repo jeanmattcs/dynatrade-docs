@@ -1,6 +1,6 @@
 # Trade Consistency and Recovery
 
-This page summarizes the runtime decision recorded internally as ADR-011: apply real player effects before publishing market pressure, and never automatically retry an ambiguous item delivery.
+This page summarizes the runtime decision recorded internally as ADR-011: apply real player effects before publishing market pressure, distinguish pre-apply retry work from credit-only retry work, and never automatically retry an ambiguous inventory or Vault mutation.
 
 ## Why this decision exists
 
@@ -29,9 +29,23 @@ Older versions and historical documentation described journal and buffer publica
 
 The current ordering accepts a different failure mode: if the player effect succeeds but the journal later fails, the market may temporarily under-count that trade. DynaTrade prefers missing pressure over pressure created by a nonexistent transaction.
 
-## Pending item delivery
+## Runtime retry stages
 
-Purchases and sell compensation can create an item-delivery obligation in `pending-deliveries.yml`.
+Prepared-trade runtime recovery now distinguishes two states before it decides
+what to replay:
+
+| Stage | Meaning | Automatic path |
+| --- | --- | --- |
+| `PRE_APPLY` | No confirmed inventory or economy mutation happened yet. | Retry the full trade conservatively when the player is online. |
+| `VAULT_CREDIT_DUE` | A sell already removed the items; only the proceeds remain. | Create or resume a pending Vault credit. Never remove items again. |
+
+This distinction is what prevents a restarted sell from charging the player's
+inventory twice.
+
+## Pending item delivery and Vault credit
+
+Purchases, sell compensation, and pending sell proceeds can create durable
+obligations in `pending-deliveries.yml`.
 
 | State | Meaning | Automatic retry |
 | --- | --- | --- |
@@ -41,17 +55,28 @@ Purchases and sell compensation can create an item-delivery obligation in `pendi
 | `DELIVERED` | Terminal outcome; the active record is atomically removed. | No |
 | `MANUAL_REVIEW` | Inventory may have changed, but the final result cannot be proven. | No |
 
-After restart, stale `IN_PROGRESS` entries become `MANUAL_REVIEW`. DynaTrade does not redeliver them automatically because the original inventory add may already have succeeded.
+After restart, stale `IN_PROGRESS` entries become `MANUAL_REVIEW`. DynaTrade
+does not automatically retry them because the original inventory add or Vault
+deposit may already have succeeded.
 
 ## Partial delivery and refunds
 
 If Bukkit accepts only part of a stack, DynaTrade persists the exact leftover. It does not issue an automatic full refund after a confirmed or ambiguous inventory mutation. A full refund after partial delivery would give the delivered portion away for free.
 
-## Sell compensation
+## Sell compensation and sell-credit recovery
 
-When a sell removes items but the economic operation cannot finish, DynaTrade uses pending delivery to return those items. It does not rely on world drops because dropped entities can despawn, be collected by another player, unload with a chunk, or disappear during a crash.
+When a sell removes items but the operation later needs a refund, DynaTrade uses
+pending item delivery to return those items. It does not rely on world drops
+because dropped entities can despawn, be collected by another player, unload
+with a chunk, or disappear during a crash.
 
 If the compensation cannot be persisted, DynaTrade logs `REFUND_FAILED`. This is an operator incident, not an informational warning.
+
+When the sell already removed items successfully and only the proceeds are
+missing, DynaTrade does not create a new item obligation. It creates a durable
+pending Vault credit keyed from the trade `operationId`. If the player is
+online on startup, the credit is attempted immediately. If the player is
+offline, it remains pending and is completed on join.
 
 ## Item policy
 
@@ -90,6 +115,7 @@ For `REFUND_FAILED`:
 - Journal failure after successful apply can omit market pressure.
 - Pending-delivery YAML persistence is synchronous and can add latency on slow disks.
 - At the total cap of `500`, a new compensation cannot be persisted automatically.
+- Reload can enter an explicit degraded mode if runtime recreation fails after the old runtime was already stopped.
 - `MANUAL_REVIEW` currently requires operator investigation.
 
 These are accepted and documented failure modes, not claims of perfect crash atomicity.
