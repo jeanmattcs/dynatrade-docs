@@ -38,6 +38,7 @@ what to replay:
 | --- | --- | --- |
 | `PRE_APPLY` | No confirmed inventory or economy mutation happened yet. | Retry the full trade conservatively when the player is online. |
 | `VAULT_CREDIT_DUE` | A sell already removed the items; only the proceeds remain. | Create or resume a pending Vault credit. Never remove items again. |
+| `JOURNAL_PENDING` | Player-side effects already happened, but the durable post-apply journal step did not finish before shutdown. | Re-run only the durable journal path and publish the market signal idempotently. |
 
 This distinction is what prevents a restarted sell from charging the player's
 inventory twice.
@@ -58,6 +59,17 @@ obligations in `pending-deliveries.yml`.
 After restart, stale `IN_PROGRESS` entries become `MANUAL_REVIEW`. DynaTrade
 does not automatically retry them because the original inventory add or Vault
 deposit may already have succeeded.
+
+## Startup recovery order
+
+The current startup path restores pending signals first, promotes unresolved
+runtime apply records to `APPLY_UNKNOWN`, compensates correlated ambiguous
+signals by persisting durable `COMPENSATED` evidence before removal, and then
+replays staged `PENDING_RETRY` work by stage.
+
+That means `JOURNAL_PENDING` recovery happens only after the runtime has a
+fresh trade service instance, while `APPLY_UNKNOWN` compensation remains a
+startup-only market-signal correction path.
 
 ## Partial delivery and refunds
 
@@ -82,7 +94,19 @@ offline, it remains pending and is completed on join.
 
 The current market prices Bukkit material identity. Customized metadata can represent substantially different value, so non-trivial names, lore, enchantments, damage, attributes, persistent data, potion state, custom models, and similar components are rejected.
 
-This prevents custom items from being consumed or normalized as ordinary commodities. Broader item identity is future architecture work.
+This policy is fail-closed. If the runtime sees specialized Bukkit item meta it
+does not fully trust, it rejects the trade instead of attempting a partial
+interpretation. Broader item identity is future architecture work.
+
+## Reload and shutdown behavior
+
+- shutdown persists queued `PRE_APPLY` retries before discarding apply work
+- shutdown also persists abandoned post-apply journal work as `JOURNAL_PENDING`
+- reload drains and persists the old runtime first, then stops it completely,
+  and only then creates the replacement runtime
+
+Known limitation: reload remains synchronous and can briefly block the main
+server thread while it drains in-flight work.
 
 ## Concurrency and capacity
 

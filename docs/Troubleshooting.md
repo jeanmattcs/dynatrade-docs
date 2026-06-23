@@ -205,7 +205,7 @@ Do not treat this as notification-only logging. It represents an unresolved econ
 - The server remains healthy, but there is a visible backlog effect under load
 
 **Cause:**
-This is usually the bounded apply stage doing its job. In `0.8.2`, durable trades can be applied through a controlled main-thread drain instead of all at once.
+This is usually the bounded apply stage doing its job. In `0.8.3`, durable trades can be applied through a controlled main-thread drain instead of all at once.
 
 **Resolution:**
 1. Check your current `apply:` settings in `config.yml`.

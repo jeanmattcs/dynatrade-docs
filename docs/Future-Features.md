@@ -6,7 +6,7 @@ It describes public direction for server owners, not the internal implementation
 
 ## Available Today
 
-The current `0.8.2` technical preview already includes:
+The current `0.8.3` technical preview already includes:
 
 - cycle-based dynamic pricing
 - commands and GUI trading

@@ -188,13 +188,14 @@ Reloads configuration files and rebuilds the runtime.
 **Permission:** `dynatrade.admin`
 
 **What it does:**
-1. Reloads `config.yml`, `items.yml`, `items_pt.yml`, and the active language file
-2. Closes new trade admission and drains in-flight apply and durability work for up to about 3 seconds
-3. Persists the current runtime while the old runtime can still be kept active on failure
-4. Rebuilds the pricing runtime using the reloaded configuration
-5. Restores the current market state from `market-state.yml`
-6. Recovers any valid pending signals from the journal
-7. Preserves the previous runtime if the failure happens before the old runtime is stopped
+1. Closes new trade admission and drains in-flight apply and durability work for up to about 3 seconds
+2. Persists the current runtime while the old runtime can still be kept active on failure
+3. Stops the old runtime completely after persistence succeeds
+4. Reloads `config.yml`, `items.yml`, `items_pt.yml`, and the active language file
+5. Rebuilds the pricing runtime using the reloaded configuration
+6. Restores the current market state from `market-state.yml`
+7. Recovers any valid pending signals from the journal
+8. Enters degraded mode if recreation fails only after the old runtime was already stopped
 
 **When to use:**
 - After editing `config.yml`, `items.yml`, or `items_pt.yml`

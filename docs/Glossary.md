@@ -33,6 +33,10 @@ A retry stage meaning no confirmed inventory or economy mutation has happened ye
 ### `VAULT_CREDIT_DUE`
 A retry stage meaning a sell already removed the items and recovery must only complete the pending Vault credit.
 
+### `JOURNAL_PENDING`
+A retry stage meaning player-side effects already happened and recovery must
+only finish the durable post-apply journal step.
+
 ### `PENDING`
 A delivery state that is safe for automatic retry because no inventory mutation is known to have started.
 
@@ -47,6 +51,14 @@ An ambiguous delivery or Vault-credit mutation that may already have changed pla
 
 ### `REFUND_FAILED`
 A high-priority log outcome indicating that sell compensation could not be made durable.
+
+### `APPLY_UNKNOWN`
+A runtime state meaning shutdown or crash left the final player-side apply
+outcome ambiguous.
+
+### `COMPENSATED`
+A runtime state meaning DynaTrade durably recorded compensation for a correlated
+ambiguous market signal before removing that signal.
 
 ---
 

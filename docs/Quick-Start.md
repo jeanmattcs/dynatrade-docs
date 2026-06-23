@@ -17,9 +17,13 @@ Before installing DynaTrade, make sure you have:
 
 Current status:
 
-- version: `0.8.2`
+- version: `0.8.3`
 - public status: `Technical Preview`
 - runtime status: usable for controlled evaluation
+
+WARNING: Downgrade from 0.8.3 to 0.8.2 is not supported.
+The rt3 audit log schema and PendingDeliveryService persistence format
+are incompatible with 0.8.2. Downgrading may corrupt persisted state.
 
 ---
 

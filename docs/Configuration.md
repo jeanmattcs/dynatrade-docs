@@ -180,7 +180,7 @@ With the current defaults, `4/4` active participants stays at full confidence wh
 ---
 ### Minimal effectiveVref calibration
 
-The current `0.8.2` technical preview also includes `E-15B` MVP Phase 1 implemented as minimal effectiveVref calibration.
+The current `0.8.3` technical preview also includes `E-15B` MVP Phase 1 implemented as minimal effectiveVref calibration.
 
 ```yaml
 pricing:
@@ -227,7 +227,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.8.2` line includes bounded main-thread apply draining for durable trades.
+The `0.8.3` line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:

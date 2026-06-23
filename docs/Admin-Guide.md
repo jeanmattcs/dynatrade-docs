@@ -79,8 +79,9 @@ Operationally, reload now does more than just rebuild config:
 
 - it closes new trade admission first;
 - drains in-flight apply and durability work for up to about 3 seconds;
-- persists the old runtime before the swap;
-- keeps the old runtime if the failure happens before the stop/swap boundary;
+- persists the old runtime before stopping it;
+- stops the old runtime completely before creating the replacement runtime;
+- keeps the old runtime if the failure happens before the stop boundary;
 - enters degraded mode if the failure happens only after the old runtime was already stopped.
 
 If you change `apply.max-per-tick` or `apply.drain-deadline-ms`, treat that as an operational tuning change. Reload applies it immediately, but you should still validate the result during a staged or real load test before leaving it in production.
@@ -165,7 +166,7 @@ DynaTrade logs to the server console at key events. Learning to read these logs 
 ```
 [DynaTrade] [scheduler] started interval=6000t (300s)
 [DynaTrade] [runtime] commands registered.
-[DynaTrade] [startup] plugin enabled version=0.8.2 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
+[DynaTrade] [startup] plugin enabled version=0.8.3 language=en template=BALANCED templateOverrides=2 economy=ready restoredItems=32 restoredSignals=3
 ```
 
 A clean startup shows: the scheduler started, commands registered, and the startup summary reported the restored item/signal counts.
@@ -180,7 +181,7 @@ One line per cycle. This is the normal runtime heartbeat. Confirms how many item
 
 ### Trade apply backpressure
 
-The current `0.8.2` line uses bounded main-thread apply draining for durable trades.
+The current `0.8.3` line uses bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:

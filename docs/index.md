@@ -6,7 +6,7 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 
 ---
 
-## Current version: 0.8.2
+## Current version: 0.8.3
 
 Highlights of the current line:
 
@@ -63,7 +63,13 @@ The documented validated surface is `Spigot 1.21.4` and `Paper 1.21.4`.
 
 ## Validation position
 
-The current `0.8.2` line has recorded local smoke, benchmark, and recovery evidence, but those artifacts are environment-specific and should be read from the current validation materials rather than from fixed public summary numbers.
+The current `0.8.3` line has recorded local smoke, benchmark, and recovery evidence, but those artifacts are environment-specific and should be read from the current validation materials rather than from fixed public summary numbers.
+
+Compatibility note:
+
+WARNING: Downgrade from 0.8.3 to 0.8.2 is not supported.
+The rt3 audit log schema and PendingDeliveryService persistence format
+are incompatible with 0.8.2. Downgrading may corrupt persisted state.
 
 This is enough to treat the line as a technical preview runtime for controlled evaluation, not as a broad public performance guarantee.
 

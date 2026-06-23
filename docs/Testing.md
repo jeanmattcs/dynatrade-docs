@@ -1,6 +1,6 @@
 # Testing
 
-This page documents the validated test surface for DynaTrade `0.8.2`, the recorded validation material, and the expected behavior under extreme burst conditions.
+This page documents the validated test surface for DynaTrade `0.8.3`, the recorded validation material, and the expected behavior under extreme burst conditions.
 
 ---
 
@@ -34,7 +34,7 @@ Latest automated baseline:
 
 ## Validation posture
 
-DynaTrade has recorded local load, race, recovery, and burst-behavior evidence for the `0.8.2` technical preview line.
+DynaTrade has recorded local load, race, recovery, and burst-behavior evidence for the `0.8.3` technical preview line.
 
 Those artifacts are environment-dependent. Public documentation should treat them as operator validation material, not as fixed release-performance guarantees.
 
@@ -110,7 +110,7 @@ For brutal fire-and-forget stress, DynaTrade is validated by the audit trail rat
 
 ## Pricing validation highlights
 
-The current `0.8.2` line includes dedicated validation for the participation-aware pricing path:
+The current `0.8.3` line includes dedicated validation for the participation-aware pricing path:
 
 - `1` player selling the same volume produces weaker adjusted pressure than multiple players selling that same total volume
 - the dominant-side player count is direction-aware: buy pressure uses buyers, sell pressure uses sellers
@@ -127,7 +127,7 @@ Recent runtime field validation also captured the full live path:
 
 ## Minimal effectiveVref calibration validation
 
-The current `0.8.2` line also includes focused validation for `E-15B` MVP Phase 1.
+The current `0.8.3` line also includes focused validation for `E-15B` MVP Phase 1.
 
 Validated evidence in the current repository covers:
 
@@ -159,7 +159,7 @@ The current public validation surface does not claim implementation of:
 
 ## Release position
 
-The current `0.8.2` line is documented with:
+The current `0.8.3` line is documented with:
 
 - recorded local validation material
 - stable restart and recovery behavior in the documented runs
