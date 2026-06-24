@@ -118,7 +118,7 @@ Important runtime detail:
 
 - `plugin.yml` does not declare a Bukkit permission node on the root `/dt` command itself
 - `/dt` and `/dt help` can therefore be reached at the command-root level
-- the admin gate is applied in code for the protected subcommands such as `/dt status`, `/dt item`, `/dt reload`, and `/dt cycle`
+- the admin gate is applied in code for the protected subcommands such as `/dt status`, `/dt item`, `/dt premium status`, `/dt reload`, and `/dt cycle`
 - the destructive reset flow is intentionally split into the separate `dynatrade.admin.reset` permission
 
 ---
@@ -132,7 +132,8 @@ Shows a summary of available `/dt` subcommands.
 Behavior:
 
 - `/dt` and `/dt help` show the public help lines to any sender
-- admin-only help lines are added only when the sender also has `dynatrade.admin`
+- the protected `status`, `item`, `premium status`, `reload`, and `cycle` help lines are added only when the sender also has `dynatrade.admin`
+- the destructive `reset` help line is added only when the sender also has `dynatrade.admin.reset`
 
 Use this first if a staff member has access to `/dt` but is not sure which operational actions are available on the current server.
 
@@ -152,6 +153,8 @@ Shows the current health of the DynaTrade runtime.
 - Current cycle generation number
 - Number of tracked items
 - Number of pending signals in the buffer
+- Player-aware pricing normalization status
+- Whether the last processed cycle saw player participation data
 - Whether a prepared checkpoint is present
 - Storage health summary
 
@@ -178,6 +181,24 @@ Shows a focused diagnostic snapshot for one item.
 
 Use this to quickly answer player reports about a specific item's pricing.
 It is also read-only and safe to delegate to staff who should not be changing the live economy.
+
+---
+
+### `/dt premium status`
+
+Shows the current optional quote-adjustment configuration and the latest momentum values visible to the runtime.
+
+**Permission:** `dynatrade.admin`
+
+**What it shows:**
+- whether the optional momentum-spread layer is enabled
+- current `tau-*` and `k-*` runtime parameters
+- up to `10` item momentum values with warmup state
+
+**Notes:**
+- this is an admin diagnostic command
+- it does not change prices or trigger a cycle
+- it is useful only if you are evaluating the optional `premium.momentum-spread` layer
 
 ---
 
@@ -266,8 +287,8 @@ Performs a full reset of the dynamic market state, restoring base prices from `i
 | `dynatrade.price` | `true` | `/price` |
 | `dynatrade.buy` | `true` | `/buy` |
 | `dynatrade.sell` | `true` | `/sell` |
-| `dynatrade.admin` | `op` | `/dt status`, `/dt item`, `/dt reload`, `/dt cycle`, plus admin-only help lines under `/dt help` |
-| `dynatrade.admin.reset` | `op` | `/dt reset` |
+| `dynatrade.admin` | `op` | `/dt status`, `/dt item`, `/dt premium status`, `/dt reload`, `/dt cycle`, plus the matching help lines under `/dt help` |
+| `dynatrade.admin.reset` | `op` | `/dt reset`, plus the reset help line under `/dt help` |
 
 The `dynatrade.admin` node is the main gate for protected `/dt` administration subcommands. It is appropriate for trusted staff who need to inspect the economy, reload config, or force a cycle. The `dynatrade.admin.reset` permission is intentionally separate so only owners or senior administrators can wipe the market state.
 

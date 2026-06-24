@@ -88,6 +88,12 @@ A successful output looks like:
 
 [DynaTrade] [DATA] Generation: 0
 [DynaTrade] [DATA] Items: 32
+[DynaTrade] [DATA] Pending signals: 0
+[DynaTrade] [PRICING] player-aware-pressure: target=4 minParticipation=0.25 activeReachEnabled=true minActiveReach=0.50 reachWeight=0.25
+[DynaTrade] [PRICING] last cycle player participation data seen: false
+
+[DynaTrade] [SYS] Checkpoint: none (no pending recovery)
+[DynaTrade] [SYS] Storage: healthy (last write OK)
 ```
 
 If Economy shows `Unavailable`, Vault or the economy provider is not loaded. See [Troubleshooting](Troubleshooting.md#economy-unavailable-after-startup).

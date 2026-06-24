@@ -26,9 +26,9 @@ Additional validation for the current line also covered:
 
 Latest automated baseline:
 
-- `364` tests across `56` suites
+- `395` tests across `55` suites
 - `0` failures and `0` errors
-- clean Java 21 compilation
+- clean compilation with the project still targeting Java `21`
 
 ---
 

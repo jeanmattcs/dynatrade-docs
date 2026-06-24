@@ -251,6 +251,27 @@ Change these only if you are actively benchmarking your own environment.
 
 ---
 
+### Trade history retention
+
+```yaml
+history:
+  inactive-player-ttl-days: 7
+```
+
+What this does:
+
+| Key | Meaning |
+| --- | --- |
+| `inactive-player-ttl-days` | Removes cached trade-history state for players who have not been read or indexed for that many days |
+
+Notes:
+
+- use `0` to disable this TTL-based eviction
+- this does not change live prices or pending trade state
+- it keeps per-player history retention bounded over time
+
+---
+
 ### Trade admission control
 
 The current runtime also includes overload protection for accepted-but-not-yet-applied trades.

@@ -25,6 +25,8 @@ A healthy output looks like this:
 [DynaTrade] [DATA] Generation: 47
 [DynaTrade] [DATA] Items: 32
 [DynaTrade] [DATA] Pending signals: 4
+[DynaTrade] [PRICING] player-aware-pressure: target=6 minParticipation=0.35 activeReachEnabled=true minActiveReach=0.40 reachWeight=0.25
+[DynaTrade] [PRICING] last cycle player participation data seen: true
 
 [DynaTrade] [SYS] Checkpoint: none (no pending recovery)
 [DynaTrade] [SYS] Storage: healthy (last write OK)
@@ -37,8 +39,10 @@ A healthy output looks like this:
 | **Next cycle** | Confirms the scheduler is firing normally. |
 | **Generation** | Increments by one each cycle. A stale number after a long session may indicate a scheduler problem. |
 | **Pending signals** | The number of trades waiting for the next cycle. Normal to see a non-zero value between cycles. |
+| **player-aware-pressure** | Shows the current player-aware pricing normalization settings that scale dominant-side pressure. |
+| **last cycle player participation data seen** | `true` means the last processed cycle observed participation data. `false` usually means no qualifying participation signal was present in that cycle. |
 | **Checkpoint** | Should normally show `none`. A checkpoint present on startup means DynaTrade recovered a prepared cycle — this is expected after a crash. |
-| **Storage** | Should be `OK`. |
+| **Storage** | Should be `healthy`. |
 
 If `/dt status` instead prints a degraded-state warning and stops there, the
 plugin no longer has an active runtime. Trades are unavailable and a full
@@ -59,6 +63,20 @@ Use this to answer player questions about a specific item's price, trend, or lim
 [DynaTrade] [DATA] Trend: up
 [DynaTrade] [DATA] Limits: $45.00 - $1200.00
 ```
+
+### Optional quote-layer check: `/dt premium status`
+
+Use this only when you are evaluating the optional momentum-driven
+quote-adjustment layer rather than the base market price itself.
+
+It shows:
+
+- whether the optional momentum-spread layer is enabled
+- the current `tau-*` and `k-*` runtime values
+- up to `10` item momentum values with warmup state
+
+If you are not using the optional quote-adjustment layer, you can ignore this
+command safely.
 
 ---
 
@@ -250,7 +268,7 @@ DynaTrade uses two admin permission nodes intentionally. This lets you give staf
 
 | Permission | What it enables |
 |---|---|
-| `dynatrade.admin` | Status, item inspection, reload, manual cycle |
+| `dynatrade.admin` | Status, item inspection, premium status, reload, manual cycle |
 | `dynatrade.admin.reset` | Full market reset (destructive — give to owners only) |
 
 ---
