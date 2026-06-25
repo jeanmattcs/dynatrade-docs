@@ -19,6 +19,7 @@ Additional validation for the current line also covered:
 - player-aware pressure normalization as base pricing behavior
 - active participation reach refinement for full-confidence cycles
 - `E-15B` MVP Phase 1 implemented and validated as minimal effectiveVref calibration
+- `E-16A` Market Insights dashboard validated through `MarketInsightsGuiTest` covering summary rendering, top gainers, top losers, and most traded items
 - runtime field validation with real player-backed trades through Paper + Mineflayer
 - apply-before-signal trade ordering and journal-failure behavior
 - pending delivery restart, partial-leftover, and concurrent-event behavior
@@ -26,7 +27,7 @@ Additional validation for the current line also covered:
 
 Latest automated baseline:
 
-- `395` tests across `55` suites
+- `407` tests across `56` suites
 - `0` failures and `0` errors
 - clean compilation with the project still targeting Java `21`
 

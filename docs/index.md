@@ -21,6 +21,7 @@ Highlights of the current line:
 - optional momentum-driven quote adjustment, disabled by default
 - processing-state feedback during buy and sell execution
 - safer operator defaults for production servers
+- `E-16A` Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
 
 Current status:
 

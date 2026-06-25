@@ -16,6 +16,7 @@ The current `0.8.3` technical preview already includes:
 - minimal effectiveVref calibration in the current pricing runtime
 - momentum signal generation and an optional quote-adjustment layer
 - trade admission control
+- `E-16A` Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
 
 ## Current Focus
 
@@ -31,9 +32,9 @@ That means:
 
 Future work is expected to focus on:
 
+- remaining `E-16B-F` scope: bounded analytics history, trend metrics, browse-all-trends views, item-specific insights, and historical price visualization
 - better market interpretation and calibration beyond the current minimal effectiveVref calibration
 - stronger operator diagnostics
-- broader market summaries and visibility
 - more validation and release hardening
 - broader item and ecosystem foundations over time
 
