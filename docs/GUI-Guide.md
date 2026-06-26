@@ -119,7 +119,7 @@ This is especially important now that translated item names can appear in the GU
 
 ## Market Insights Dashboard
 
-The Market Insights dashboard (`E-16A`) can be accessed from the `/market` category selector. It provides a player-facing market summary screen showing:
+The Market Insights dashboard can be accessed from the `/market` category selector. It provides a player-facing market summary screen showing:
 
 - **Top Gainers** — items with the highest positive price movement
 - **Top Losers** — items with the strongest negative price movement

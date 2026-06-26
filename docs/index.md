@@ -6,10 +6,12 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 
 ---
 
-## Current version: 0.8.3
+## Current version: 0.8.4
 
 Highlights of the current line:
 
+- architecture consolidation: thread safety (lock-free transaction buffer, `volatile` fields, `ReentrantLock` cycle transitions, `ConcurrentHashMap` on all shared state), durability (atomic file ops, `FileChannel.force()` directory sync), `GuiDependencies` record, factory-style runtime assembly, upfront config validation, `PricingService` constructor refactor
+- Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
 - durable pending-trade journaling with stronger restart recovery
 - apply-before-signal ordering, staged runtime retry recovery, and recovery-aware pending item delivery / Vault credit
 - async durability batching and cycle persistence off the Bukkit thread
@@ -21,7 +23,6 @@ Highlights of the current line:
 - optional momentum-driven quote adjustment, disabled by default
 - processing-state feedback during buy and sell execution
 - safer operator defaults for production servers
-- `E-16A` Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
 
 Current status:
 
@@ -64,13 +65,14 @@ The documented validated surface is `Spigot 1.21.4` and `Paper 1.21.4`.
 
 ## Validation position
 
-The current `0.8.3` line has recorded local smoke, benchmark, and recovery evidence, but those artifacts are environment-specific and should be read from the current validation materials rather than from fixed public summary numbers.
+The current `0.8.4` line has recorded local smoke, benchmark, and recovery evidence, but those artifacts are environment-specific and should be read from the current validation materials rather than from fixed public summary numbers.
 
 Compatibility note:
 
-WARNING: Downgrade from 0.8.3 to 0.8.2 is not supported.
-The rt3 audit log schema and PendingDeliveryService persistence format
-are incompatible with 0.8.2. Downgrading may corrupt persisted state.
+WARNING: Downgrade from 0.8.4 to 0.8.3 is not supported.
+The rt3 audit log schema, PendingDeliveryService persistence format, and
+architecture hardening state are incompatible with 0.8.3.
+Downgrading may corrupt persisted state.
 
 This is enough to treat the line as a technical preview runtime for controlled evaluation, not as a broad public performance guarantee.
 

@@ -1,45 +1,49 @@
 # Future Features
 
-This page is intentionally high level.
+This page describes the direction DynaTrade is heading, not a commitment to specific dates or versions.
 
-It describes public direction for server owners, not the internal implementation backlog.
+Implementation is gate-driven — each phase only begins when the current one is stable and well-documented enough to support it.
 
 ## Available Today
 
-The current `0.8.3` technical preview already includes:
+The current `0.8.4` technical preview already includes:
 
-- cycle-based dynamic pricing
-- commands and GUI trading
-- durable journaling and restart recovery
-- bounded apply backpressure
+- cycle-based dynamic pricing driven by real player activity
+- commands and GUI trading through `/market`, `/buy`, `/sell`, and `/price`
+- durable trade journaling and restart recovery
+- bounded apply backpressure for burst protection
 - player-aware pressure normalization and active participation reach
-- minimal effectiveVref calibration in the current pricing runtime
+- minimal effectiveVref calibration for high-volume items
 - momentum signal generation and an optional quote-adjustment layer
-- trade admission control
-- `E-16A` Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
+- trade admission control for overload protection
+- Market Insights dashboard: player-facing summary showing market direction, top gainers, top losers, and most traded items
 
-## Current Focus
+## What Is Coming Next
 
-The next public priority is stability and documentation alignment around the runtime that already exists today.
+### Historical market data
+The current Market Insights dashboard shows only the latest cycle. Future releases will add bounded multi-cycle memory so players and admins can see how prices and rankings have moved over recent cycles instead of only the most recent one.
 
-That means:
+### Trend detection and browsing
+Once historical data is available, the system will compute trend signals from recent cycles — distinguishing a sustained move from a one-cycle spike. Players will be able to browse the full market sorted by trend strength, volume, appreciation, or depreciation.
 
-- clearer operator docs
-- clearer validation boundaries
-- cleaner separation between what is live now and what is still planned
+### Per-item insight screens
+Each tradable item will gain a dedicated view showing its recent price path, volume history, predominant direction, and how current activity compares to its recent average.
 
-## Planned Direction
+### Compact historical visualization
+Text and icon-based indicators will give players a quick visual sense of an item's recent trajectory — directional sequences, mini bar charts, or cycle-strip indicators that fit inside the existing GUI without adding clutter.
 
-Future work is expected to focus on:
+### Operator diagnostics
+Administrators will get clearer visibility into why prices moved the way they did, what calibration decisions the runtime made, and how to investigate player reports without digging through raw files.
 
-- remaining `E-16B-F` scope: bounded analytics history, trend metrics, browse-all-trends views, item-specific insights, and historical price visualization
-- better market interpretation and calibration beyond the current minimal effectiveVref calibration
-- stronger operator diagnostics
-- more validation and release hardening
-- broader item and ecosystem foundations over time
+### Calibration improvements
+Beyond the current minimal effectiveVref calibration, future work includes risk scoring, volatility profiles, thin-market detection, and adaptive spread behavior — making the market smarter about how it interprets trade activity across different items and conditions.
+
+### Validation and hardening
+Each new feature comes with dedicated validation. A dedicated hardening milestone will consolidate regression coverage, field validation, smoke tests, and benchmark evidence before the project moves toward a stable release.
+
+### Broader item and ecosystem foundations
+Longer-term work includes abstracting item identity beyond Bukkit Material, and preparing safe public API boundaries for other plugins to interact with DynaTrade's market data.
 
 ## Roadmap Note
 
-Future direction is gate-driven, not calendar-driven.
-
-Implementation order may change as validation, supportability, and documentation needs evolve.
+None of these are calendar commitments. Each phase opens only when the current runtime is stable, documented, and validated enough to support it. The goal is a reliable market engine, not a race to add features.

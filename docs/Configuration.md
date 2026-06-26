@@ -170,7 +170,7 @@ The nested `active-participation-reach` block tunes the additional reach refinem
 
 Important behavior:
 
-- `enabled: false` disables only the E-15A.2 reach layer
+- `enabled: false` disables only the active-reach refinement layer
 - base player-aware normalization remains part of pricing behavior
 - the reach layer only refines cycles that already reached full participation confidence
 - invalid or unavailable active-participant data falls back automatically to the base participation result
@@ -180,7 +180,7 @@ With the current defaults, `4/4` active participants stays at full confidence wh
 ---
 ### Minimal effectiveVref calibration
 
-The current `0.8.3` technical preview also includes `E-15B` MVP Phase 1 implemented as minimal effectiveVref calibration.
+The current `0.8.4` technical preview also includes minimal effectiveVref calibration.
 
 ```yaml
 pricing:
@@ -204,7 +204,7 @@ What it does not do today:
 - no `adaptiveSpreadBonus`
 - no admin calibration diagnostics
 
-This is intentionally a bounded MVP slice. Remaining `E-15B` scope is future work.
+This is intentionally a bounded first slice. Remaining calibration scope (risk scoring, volatility profiles, thin-market detection, adaptive spread behavior, and admin diagnostics) is future work.
 
 ---
 ### Operational logs
@@ -227,7 +227,7 @@ Recommended production posture:
 
 ### Apply backpressure
 
-The `0.8.3` line includes bounded main-thread apply draining for durable trades.
+The `0.8.4` line includes bounded main-thread apply draining for durable trades.
 
 ```yaml
 apply:
@@ -418,6 +418,7 @@ Important fields:
 | --- | --- |
 | key such as `DIAMOND` | Minecraft material name in uppercase |
 | `display-name` | Player-facing name |
+| `description` | Optional lore text shown in the GUI |
 | `base-price` | Long-term baseline price |
 | `category` | Market group |
 | `sigma` | Price sensitivity override |

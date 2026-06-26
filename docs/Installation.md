@@ -15,9 +15,10 @@ This page covers every step required to install DynaTrade, verify that it is run
 
 DynaTrade does **not** require a database. All market state is stored in YAML files inside the plugin folder.
 
-WARNING: Downgrade from 0.8.3 to 0.8.2 is not supported.
-The rt3 audit log schema and PendingDeliveryService persistence format
-are incompatible with 0.8.2. Downgrading may corrupt persisted state.
+WARNING: Downgrade from 0.8.4 to 0.8.3 is not supported.
+The rt3 audit log schema, PendingDeliveryService persistence format, and
+architecture hardening state are incompatible with 0.8.3.
+Downgrading may corrupt persisted state.
 
 ---
 
@@ -148,7 +149,7 @@ New versions may add new keys to `config.yml`, `items.yml`, `items_pt.yml`, or t
 - New optional keys will be missing from your file - DynaTrade will use internal defaults for any missing key, so nothing will break.
 - If you want to use a new feature, add the corresponding key to your file manually.
 
-For the current `0.8.3` line, pay special attention to the `apply:`, `trade.admission:`, `observability:`, and delivery/recovery-related persisted state files. Older configs may not include every newer control yet.
+For the current `0.8.4` line, pay special attention to the `apply:`, `trade.admission:`, `observability:`, and delivery/recovery-related persisted state files. Older configs may not include every newer control yet.
 
 ### After a major version change
 
