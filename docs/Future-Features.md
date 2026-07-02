@@ -16,21 +16,22 @@ The current `0.8.4` technical preview already includes:
 - minimal effectiveVref calibration for high-volume items
 - momentum signal generation and an optional quote-adjustment layer
 - trade admission control for overload protection
-- Market Insights dashboard: player-facing summary showing market direction, top gainers, top losers, and most traded items
+- expanded `/market` hub with Explore, Categories, Insights, and personal trade history
+- Market Insights dashboard and ranking views showing market direction, top gainers, top losers, most traded, most bought, and most sold
 
 ## What Is Coming Next
 
-### Historical market data
-The current Market Insights dashboard shows only the latest cycle. Future releases will add bounded multi-cycle memory so players and admins can see how prices and rankings have moved over recent cycles instead of only the most recent one.
+### Historical market depth
+The current runtime already keeps bounded multi-cycle analytics history internally and uses it for trend presentation. Future releases can expose more of that history to players and operators in broader public workflows.
 
-### Trend detection and browsing
-Once historical data is available, the system will compute trend signals from recent cycles — distinguishing a sustained move from a one-cycle spike. Players will be able to browse the full market sorted by trend strength, volume, appreciation, or depreciation.
+### Broader trend workflows
+The current runtime already computes trend signals and supports richer market browsing. Future work is about expanding how those signals are surfaced, explained, and operationalized rather than introducing trend awareness from scratch.
 
-### Per-item insight screens
-Each tradable item will gain a dedicated view showing its recent price path, volume history, predominant direction, and how current activity compares to its recent average.
+### Deeper per-item insight workflows
+The current runtime already includes an item detail view with simple and advanced modes, recent-cycle context, and compact visualization. Future work can extend that into stronger long-window inspection and operator-facing analysis flows.
 
-### Compact historical visualization
-Text and icon-based indicators will give players a quick visual sense of an item's recent trajectory — directional sequences, mini bar charts, or cycle-strip indicators that fit inside the existing GUI without adding clutter.
+### Broader historical visualization
+Future work can expand the current compact visual cues into broader history views, comparisons, and richer operator diagnostics without abandoning the lightweight in-game presentation.
 
 ### Operator diagnostics
 Administrators will get clearer visibility into why prices moved the way they did, what calibration decisions the runtime made, and how to investigate player reports without digging through raw files.

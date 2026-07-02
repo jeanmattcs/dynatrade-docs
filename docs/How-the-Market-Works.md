@@ -18,7 +18,7 @@ Every price change in DynaTrade passes through a cycle. A cycle:
 
 Prices do not change after every trade. They change when the next cycle runs.
 
-The cycle interval is controlled by `batch-interval-ticks` in `config.yml`. The default is every 5 minutes (`6000` ticks). You can force an immediate cycle with `/dt cycle`.
+In the current public technical-preview docs, the most important operator-facing fact is that pricing remains cycle-based rather than click-by-click. You can force an immediate cycle with `/dt cycle`.
 
 ---
 

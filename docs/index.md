@@ -11,7 +11,8 @@ Instead of reacting to every buy or sell like a slot machine, it aggregates play
 Highlights of the current line:
 
 - architecture consolidation: thread safety (lock-free transaction buffer, `volatile` fields, `ReentrantLock` cycle transitions, `ConcurrentHashMap` on all shared state), durability (atomic file ops, `FileChannel.force()` directory sync), `GuiDependencies` record, factory-style runtime assembly, upfront config validation, `PricingService` constructor refactor
-- Market Insights dashboard: player-facing market summary, top gainers, top losers, and most traded items inside `/market`
+- expanded `/market` hub with Explore, Categories, Insights, and personal trade history
+- Market Insights dashboard and ranking views: player-facing market summary, top gainers, top losers, most traded, most bought, and most sold
 - durable pending-trade journaling with stronger restart recovery
 - apply-before-signal ordering, staged runtime retry recovery, and recovery-aware pending item delivery / Vault credit
 - async durability batching and cycle persistence off the Bukkit thread

@@ -113,7 +113,12 @@ Even if the server displays `Diamante` in Portuguese, the command still uses `DI
 ```
 /market
 ```
-Opens the market GUI. This is the main player-facing interface.
+Opens the market hub. This is the main player-facing interface and the entry point to:
+
+- Explore: full item listing
+- Categories: category-based browsing
+- Insights: market summary and ranking views
+- Statement: personal recent trade history
 
 ```
 /buy DIAMOND 1
@@ -137,7 +142,7 @@ Forces an immediate market cycle, processing all pending buy and sell pressure a
 1. Start the server and confirm the plugin enables cleanly in the console.
 2. Run `/dt status` — confirm economy status is `OK` and the scheduler is running.
 3. Run `/price DIAMOND` — confirm a price is shown with buy and sell values.
-4. Open `/market` — browse the GUI, confirm items are listed.
+4. Open `/market` — confirm the hub opens, then test Explore, Categories, and Insights.
 5. Run `/buy DIAMOND 1` — confirm the transaction completes and the receipt appears in chat.
 6. Run `/sell IRON_INGOT 5` — confirm the sell completes.
 7. Run `/dt cycle` — force a cycle and check the console for a cycle summary line.

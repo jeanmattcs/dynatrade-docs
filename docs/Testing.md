@@ -19,7 +19,7 @@ Additional validation for the current line also covered:
 - player-aware pressure normalization as base pricing behavior
 - active participation reach refinement for full-confidence cycles
 - minimal effectiveVref calibration implemented and validated
-- Market Insights dashboard validated through focused GUI tests covering summary rendering, top gainers, top losers, and most traded items
+- Market Insights surfaces validated through focused GUI tests covering summary rendering, top gainers, top losers, most traded, and ranking/detail navigation
 - runtime field validation with real player-backed trades through Paper + Mineflayer
 - apply-before-signal trade ordering and journal-failure behavior
 - pending delivery restart, partial-leftover, and concurrent-event behavior

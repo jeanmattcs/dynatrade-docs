@@ -128,8 +128,8 @@ The final pipeline behavior that snaps a nearly settled result exactly to its ba
 ### Market cycle
 The periodic event that drains the transaction buffer, recalculates prices, persists state, and applies the new runtime prices.
 
-### Cycle interval (`batch-interval-ticks`)
-How often the cycle runs. `20` ticks equals `1` second.
+### Cycle interval
+How often the pricing cycle runs. `20` ticks equals `1` second. Public docs may refer to this conceptually even when the current configuration guide is focused on the safer operator-facing tuning surface.
 
 ### Cycle generation
 The incrementing number that advances after every successful cycle.

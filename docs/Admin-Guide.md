@@ -88,6 +88,7 @@ command safely.
 2. Run `/dt reload`.
 3. Run `/dt status` — confirm the economy is `OK` and the scheduler is running.
 4. Test affected items with `/price <item>` or `/market`.
+5. In `/market`, spot-check the current public flow: hub, Explore listing, Insights, and one item detail screen.
 
 `/dt reload` preserves the current in-memory market state. Prices are not
 reset. The reloaded configuration takes effect for the next cycle and any new
